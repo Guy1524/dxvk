@@ -103,9 +103,9 @@ thread_dep = dependency('threads')
 dxvk_lib = static_library('dxvk', dxvk_src, glsl_generator.process(dxvk_shaders), dxvk_version,
   link_with           : [ util_lib, spirv_lib ],
   dependencies        : [ thread_dep, vkcommon_dep, lib_dl ],
-  include_directories : [ dxvk_include_path ],
+  include_directories : [ dxvk_include_paths ],
   override_options    : ['cpp_std='+dxvk_cpp_std])
 
 dxvk_dep = declare_dependency(
   link_with           : [ dxvk_lib ],
-  include_directories : [ dxvk_include_path ])
+  include_directories : [ dxvk_include_paths ])

@@ -51,7 +51,7 @@ d3d11_src = [
 d3d11_dll = shared_library('d3d11'+dll_ext, d3d11_src + d3d10_src, glsl_generator.process(dxgi_shaders),
   name_prefix         : '',
   dependencies        : [ lib_dxgi, dxbc_dep, dxvk_dep ],
-  include_directories : dxvk_include_path,
+  include_directories : dxvk_include_paths,
   install             : true,
   objects             : not dxvk_msvc ? 'd3d11'+def_spec_ext : [],
   vs_module_defs      : 'd3d11'+def_spec_ext,
@@ -59,4 +59,4 @@ d3d11_dll = shared_library('d3d11'+dll_ext, d3d11_src + d3d10_src, glsl_generato
 
 d3d11_dep = declare_dependency(
   link_with           : [ d3d11_dll ],
-  include_directories : [ dxvk_include_path ])
+  include_directories : [ dxvk_include_paths ])

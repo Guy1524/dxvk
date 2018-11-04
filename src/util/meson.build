@@ -15,7 +15,7 @@ util_src = files([
 ])
 
 util_lib = static_library('util', util_src,
-  include_directories : [ dxvk_include_path ],
+  include_directories : [ dxvk_include_paths ],
   override_options    : ['cpp_std='+dxvk_cpp_std])
 
 util_dep = declare_dependency(

@@ -17,19 +17,26 @@ if dxvk_compiler.get_id() == 'msvc'
   add_project_arguments('/std:' + dxvk_cpp_std, language : 'cpp')
 endif
 
-dxvk_include_path = include_directories('./include')
-
 if (cpu_family == 'x86_64')
   dxvk_library_path = meson.source_root() + '/lib'
 else
   dxvk_library_path = meson.source_root() + '/lib32'
 endif
 
-code = '''#ifndef __WINE__
+winelib_check_code = '''#ifndef __WINE__
 #error 1
 #endif'''
 
-dxvk_winelib = dxvk_compiler.compiles(code, name: 'winelib check')
+mingw_check_code = '''#ifndef __MINGW32__
+#error 1
+#endif'''
+
+dxvk_winelib = dxvk_compiler.compiles(winelib_check_code, name: 'winelib check')
+dxvk_mingw   = dxvk_compiler.compiles(mingw_check_code, name: 'mingw_check')
+
+dxvk_native = not dxvk_mingw and not dxvk_winelib and dxvk_compiler.get_id() != 'msvc'
+
+include_dirs = ['./include']
 
 if dxvk_winelib
   lib_vulkan  = declare_dependency(link_args: [ '-lwinevulkan' ])
@@ -41,6 +48,15 @@ if dxvk_winelib
   exe_ext = '.exe.so'
   dll_ext = '.dll'
   def_spec_ext = '.spec'
+elif dxvk_native
+  lib_vulkan = dxvk_compiler.find_library('vulkan', dirs : dxvk_library_path)
+  lib_dxgi   = declare_dependency(link_args: ['-ldxgi'])
+  lib_dl     = dependency('', required: false)
+  include_dirs += './include/native'
+  exe_ext = ''
+  dll_ext = ''
+  #not sure about this
+  def_spec_ext = '.def'
 else
   lib_vulkan  = dxvk_compiler.find_library('vulkan-1', dirs : dxvk_library_path)
   lib_d3d11   = dxvk_compiler.find_library('d3d11')
@@ -58,6 +74,8 @@ else
   def_spec_ext = '.def'
 endif
 
+dxvk_include_paths = include_directories(include_dirs)
+
 glsl_compiler = find_program('glslangValidator')
 glsl_generator = generator(glsl_compiler,
   output    : [ '@BASENAME@.h' ],
@@ -72,10 +90,10 @@ subdir('src')
 
 enable_tests = get_option('enable_tests')
 
-if enable_tests
+if enable_tests and not dxvk_native
   subdir('tests')
 endif
 
-if dxvk_compiler.get_id() != 'msvc'
+if dxvk_compiler.get_id() != 'msvc' and not dxvk_native
   subdir('utils')
 endif
