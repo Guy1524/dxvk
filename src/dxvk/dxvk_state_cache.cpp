@@ -411,7 +411,7 @@ namespace dxvk {
 
 
   std::string DxvkStateCache::getCacheFileName() const {
-    std::string path = env::getEnvVar(L"DXVK_STATE_CACHE_PATH");
+    std::string path = env::getEnvVar("DXVK_STATE_CACHE_PATH");
 
     if (!path.empty() && *path.rbegin() != '/')
       path += '/';
