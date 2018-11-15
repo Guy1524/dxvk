@@ -353,7 +353,7 @@ namespace dxvk {
 
 
   void DxvkStateCache::workerFunc() {
-    env::setThreadName(L"dxvk-shader");
+    env::setThreadName("dxvk-shader");
 
     while (!m_stopThreads.load()) {
       WorkerItem item;
@@ -378,7 +378,7 @@ namespace dxvk {
 
 
   void DxvkStateCache::writerFunc() {
-    env::setThreadName(L"dxvk-writer");
+    env::setThreadName("dxvk-writer");
 
     std::ofstream file;
 

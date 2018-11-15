@@ -3,6 +3,9 @@
 
 #ifdef DXVK_NATIVE
 #include <cstdlib>
+
+#include <sys/prctl.h>
+
 extern const char *__progname;
 #endif
 
@@ -12,11 +15,8 @@ namespace dxvk::env {
 
   std::string getEnvVar(const std::string& name) {
 #ifndef DXVK_NATIVE
-
     int nameLen = ::MultiByteToWideChar(CP_ACP, 0, name.c_str(), name.length() + 1, nullptr, 0);
-
     std::vector<WCHAR> wideName(nameLen);
-
     ::MultiByteToWideChar(CP_ACP, 0, name.c_str(), name.length() + 1, wideName.data(), nameLen);
 
     DWORD len = ::GetEnvironmentVariableW(wideName.data(), nullptr, 0);
@@ -31,12 +31,9 @@ namespace dxvk::env {
     
     result.resize(len);
     return str::fromws(result.data());
-
 #else
-
     const char *result = std::getenv(name.c_str());
     return std::string(result);
-
 #endif
   }
   
@@ -61,7 +58,12 @@ namespace dxvk::env {
   }
   
   
-  void setThreadName(const wchar_t* name) {
+  void setThreadName(const std::string& name) {
+#ifndef DXVK_NATIVE
+    int nameLen = ::MultiByteToWideChar(CP_ACP, 0, name.c_str(), name.length() + 1, nullptr, 0);
+    std::vector<WCHAR> wideName(nameLen);
+    ::MultiByteToWideChar(CP_ACP, 0, name.c_str(), name.length() + 1, wideName.data(), nameLen);
+
     using SetThreadDescriptionProc = void (WINAPI *) (HANDLE, PCWSTR);
 
     HMODULE module = ::GetModuleHandleW(L"kernel32.dll");
@@ -73,7 +75,10 @@ namespace dxvk::env {
       ::GetProcAddress(module, "SetThreadDescription"));
 
     if (proc != nullptr)
-      (*proc)(::GetCurrentThread(), name);
+      (*proc)(::GetCurrentThread(), wideName.data());
+#else
+    prctl( PR_SET_NAME, name.c_str() );
+#endif
   }
   
 }
