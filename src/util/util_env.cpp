@@ -3,6 +3,7 @@
 
 #ifdef DXVK_NATIVE
 #include <cstdlib>
+extern const char *__progname;
 #endif
 
 #include "./com/com_include.h"
@@ -41,6 +42,7 @@ namespace dxvk::env {
   
   
   std::string getExeName() {
+#ifndef DXVK_NATIVE
     std::vector<WCHAR> exePath;
     exePath.resize(MAX_PATH + 1);
     
@@ -53,6 +55,9 @@ namespace dxvk::env {
     return (n != std::string::npos)
       ? fullPath.substr(n + 1)
       : fullPath;
+#else
+    return std::string(__progname);
+#endif
   }
   
   
