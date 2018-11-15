@@ -1,6 +1,6 @@
 #include "util_string.h"
 
-
+#ifndef DXVK_NATIVE
 
 #ifdef CP_UNIXCP
 static constexpr int cp = CP_UNIXCP;
@@ -25,3 +25,5 @@ namespace dxvk::str {
     return result;
   }
 }
+
+#endif
