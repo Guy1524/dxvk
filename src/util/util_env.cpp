@@ -1,6 +1,10 @@
 #include "util_env.h"
 #include <vector>
 
+#ifdef DXVK_NATIVE
+#include <cstdlib>
+#endif
+
 #include "./com/com_include.h"
 
 namespace dxvk::env {
@@ -26,7 +30,8 @@ namespace dxvk::env {
     result.resize(len);
     return str::fromws(result.data());
     #else
-      
+      const char *result = std::getenv(name.c_str());
+      return std::string(result);
     #endif
   }
   
