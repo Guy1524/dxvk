@@ -10,7 +10,7 @@
 namespace dxvk::env {
 
   std::string getEnvVar(const std::string& name) {
-    #ifndef DXVK_NATIVE
+#ifndef DXVK_NATIVE
 
     int nameLen = ::MultiByteToWideChar(CP_ACP, 0, name.c_str(), name.length() + 1, nullptr, 0);
 
@@ -31,12 +31,12 @@ namespace dxvk::env {
     result.resize(len);
     return str::fromws(result.data());
 
-    #else
+#else
 
     const char *result = std::getenv(name.c_str());
     return std::string(result);
 
-    #endif
+#endif
   }
   
   
