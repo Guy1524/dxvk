@@ -852,7 +852,7 @@ namespace dxvk {
     const bool isUav = ins.op == DxbcOpcode::DclUavTyped;
     
     if (isUav) {
-      if (m_moduleInfo.options.test(DxbcOption::UseStorageImageReadWithoutFormat))
+      if (m_moduleInfo.options.useStorageImageReadWithoutFormat)
         m_module.enableCapability(spv::CapabilityStorageImageReadWithoutFormat);
       m_module.enableCapability(spv::CapabilityStorageImageWriteWithoutFormat);
     }
@@ -913,7 +913,7 @@ namespace dxvk {
     if (isUav) {
       if ((m_analysis->uavInfos[registerId].accessAtomicOp)
        || (m_analysis->uavInfos[registerId].accessTypedLoad
-        && !m_moduleInfo.options.test(DxbcOption::UseStorageImageReadWithoutFormat)))
+        && !m_moduleInfo.options.useStorageImageReadWithoutFormat))
         imageFormat = getScalarImageFormat(sampledType);
     }
     
@@ -952,7 +952,7 @@ namespace dxvk {
     // On GPUs which don't support storageImageReadWithoutFormat,
     // we have to decorate untyped UAVs as write-only
     if (isUav && imageFormat == spv::ImageFormatUnknown
-     && !m_moduleInfo.options.test(DxbcOption::UseStorageImageReadWithoutFormat))
+     && !m_moduleInfo.options.useStorageImageReadWithoutFormat)
       m_module.decorate(varId, spv::DecorationNonReadable);
     
     // Declare a specialization constant which will
@@ -1680,11 +1680,20 @@ namespace dxvk {
     //    (src0) The condition vector
     //    (src1) Vector to select from if the condition is not 0
     //    (src2) Vector to select from if the condition is 0
-    const DxbcRegisterValue condition   = emitRegisterLoad(ins.src[0], ins.dst[0].mask);
+    DxbcRegMask condMask = ins.dst[0].mask;
+
+    if (ins.dst[0].dataType == DxbcScalarType::Float64) {
+      condMask = DxbcRegMask(
+        condMask[0] && condMask[1],
+        condMask[2] && condMask[3],
+        false, false);
+    }
+    
+    const DxbcRegisterValue condition   = emitRegisterLoad(ins.src[0], condMask);
     const DxbcRegisterValue selectTrue  = emitRegisterLoad(ins.src[1], ins.dst[0].mask);
     const DxbcRegisterValue selectFalse = emitRegisterLoad(ins.src[2], ins.dst[0].mask);
     
-    const uint32_t componentCount = ins.dst[0].mask.popCount();
+    uint32_t componentCount = condMask.popCount();
     
     // We'll compare against a vector of zeroes to generate a
     // boolean vector, which in turn will be used by OpSelect
@@ -2798,9 +2807,11 @@ namespace dxvk {
   
   
   void DxbcCompiler::emitInterpolate(const DxbcShaderInstruction& ins) {
+    m_module.enableCapability(spv::CapabilityInterpolationFunction);
+
     // The SPIR-V instructions operate on input variable pointers,
     // which are all declared as four-component float vectors.
-    const uint32_t registerId = ins.src[0].idx[0].offset;
+    uint32_t registerId = ins.src[0].idx[0].offset;
     
     DxbcRegisterValue result;
     result.type = getInputRegType(registerId);
@@ -6125,7 +6136,6 @@ namespace dxvk {
   
   void DxbcCompiler::emitPsInit() {
     m_module.enableCapability(spv::CapabilityDerivativeControl);
-    m_module.enableCapability(spv::CapabilityInterpolationFunction);
     
     m_module.setExecutionMode(m_entryPointId,
       spv::ExecutionModeOriginUpperLeft);
@@ -6146,7 +6156,7 @@ namespace dxvk {
     
     // We may have to defer kill operations to the end of
     // the shader in order to keep derivatives correct.
-    if (m_analysis->usesKill && m_analysis->usesDerivatives && m_moduleInfo.options.test(DxbcOption::DeferKill)) {
+    if (m_analysis->usesKill && m_analysis->usesDerivatives && m_moduleInfo.options.deferKill) {
       m_ps.killState = m_module.newVarInit(
         m_module.defPointerType(m_module.defBoolType(), spv::StorageClassPrivate),
         spv::StorageClassPrivate, m_module.constBool(false));

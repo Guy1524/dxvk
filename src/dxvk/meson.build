@@ -24,6 +24,9 @@ dxvk_shaders = files([
   'shaders/dxvk_mipgen_frag_1d.frag',
   'shaders/dxvk_mipgen_frag_2d.frag',
   'shaders/dxvk_mipgen_frag_3d.frag',
+
+  'shaders/dxvk_pack_d24s8.comp',
+  'shaders/dxvk_pack_d32s8.comp',
   
   'shaders/dxvk_resolve_vert.vert',
   'shaders/dxvk_resolve_geom.geom',
@@ -63,6 +66,7 @@ dxvk_src = files([
   'dxvk_meta_clear.cpp',
   'dxvk_meta_copy.cpp',
   'dxvk_meta_mipgen.cpp',
+  'dxvk_meta_pack.cpp',
   'dxvk_meta_resolve.cpp',
   'dxvk_openvr.cpp',
   'dxvk_options.cpp',
@@ -102,7 +106,7 @@ thread_dep = dependency('threads')
 
 dxvk_lib = static_library('dxvk', dxvk_src, glsl_generator.process(dxvk_shaders), dxvk_version,
   link_with           : [ util_lib, spirv_lib ],
-  dependencies        : [ thread_dep, vkcommon_dep, lib_dl ],
+  dependencies        : [ thread_dep, vkcommon_dep, lib_dl ] + dxvk_extradep,
   include_directories : [ dxvk_include_paths ],
   override_options    : ['cpp_std='+dxvk_cpp_std])
 

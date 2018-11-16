@@ -30,6 +30,10 @@ IDXGIVkSwapChain : public IUnknown {
   virtual HRESULT STDMETHODCALLTYPE GetDesc(
           DXGI_SWAP_CHAIN_DESC1*    pDesc) = 0;
   
+  virtual HRESULT STDMETHODCALLTYPE GetAdapter(
+          REFIID                    riid,
+          void**                    ppvObject) = 0;
+  
   virtual HRESULT STDMETHODCALLTYPE GetDevice(
           REFIID                    riid,
           void**                    ppDevice) = 0;
@@ -66,7 +70,7 @@ IDXGIVkSwapChain : public IUnknown {
  * this interface.
  */
 MIDL_INTERFACE("7a622cf6-627a-46b2-b52f-360ef3da831c")
-IDXGIVkDevice : public IDXGIDevice2 {
+IDXGIVkDevice : public IDXGIDevice3 {
   static const GUID guid;
   
   virtual ~IDXGIVkDevice() { }
@@ -85,7 +89,7 @@ IDXGIVkDevice : public IDXGIDevice2 {
  * this interface.
  */
 MIDL_INTERFACE("907bf281-ea3c-43b4-a8e4-9f231107b4ff")
-IDXGIVkAdapter : public IDXGIAdapter2 {
+IDXGIVkAdapter : public IDXGIAdapter3 {
   static const GUID guid;
   
   virtual dxvk::Rc<dxvk::DxvkAdapter> STDMETHODCALLTYPE GetDXVKAdapter() = 0;

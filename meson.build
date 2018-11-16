@@ -1,4 +1,4 @@
-project('dxvk', ['c', 'cpp'], version : 'v0.90')
+project('dxvk', ['c', 'cpp'], version : 'v0.92')
 
 cpu_family = target_machine.cpu_family()
 
@@ -38,6 +38,8 @@ dxvk_native = not dxvk_mingw and not dxvk_winelib and dxvk_compiler.get_id() != 
 
 include_dirs = ['./include']
 
+dxvk_extradep = [ ]
+
 if dxvk_winelib
   lib_vulkan  = declare_dependency(link_args: [ '-lwinevulkan' ])
   lib_d3d11   = declare_dependency(link_args: [ '-ld3d11' ])
@@ -45,6 +47,7 @@ if dxvk_winelib
   lib_d3dcompiler_43 = declare_dependency(link_args: [ '-L'+dxvk_library_path, '-ld3dcompiler_43' ])
   lib_d3dcompiler_47 = declare_dependency(link_args: [ '-ld3dcompiler' ])
   lib_dl = declare_dependency(link_args: [ '-ldl' ])
+  dxvk_extradep += [ declare_dependency(link_args: [ '-ldl' ]) ]
   exe_ext = '.exe.so'
   dll_ext = '.dll'
   def_spec_ext = '.spec'

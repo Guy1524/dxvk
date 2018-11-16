@@ -19,7 +19,7 @@ namespace dxvk {
   class DxgiFactory;
   class DxgiOutput;
   
-  class DxgiSwapChain : public DxgiObject<IDXGISwapChain1> {
+  class DxgiSwapChain : public DxgiObject<IDXGISwapChain3> {
     
   public:
     
@@ -49,6 +49,8 @@ namespace dxvk {
             REFIID                    riid,
             void**                    ppSurface) final;
     
+    UINT STDMETHODCALLTYPE GetCurrentBackBufferIndex() final;
+
     HRESULT STDMETHODCALLTYPE GetContainingOutput(
             IDXGIOutput**             ppOutput) final;
     
@@ -105,6 +107,15 @@ namespace dxvk {
             DXGI_FORMAT               NewFormat,
             UINT                      SwapChainFlags) final;
     
+    HRESULT STDMETHODCALLTYPE ResizeBuffers1(
+            UINT                      BufferCount,
+            UINT                      Width,
+            UINT                      Height,
+            DXGI_FORMAT               Format,
+            UINT                      SwapChainFlags,
+      const UINT*                     pCreationNodeMask,
+            IUnknown* const*          ppPresentQueue) final;
+
     HRESULT STDMETHODCALLTYPE ResizeTarget(
       const DXGI_MODE_DESC*           pNewTargetParameters) final;
     
@@ -117,6 +128,35 @@ namespace dxvk {
 
     HRESULT STDMETHODCALLTYPE SetRotation(
             DXGI_MODE_ROTATION        Rotation) final;
+    
+    HANDLE STDMETHODCALLTYPE GetFrameLatencyWaitableObject() final;
+
+    HRESULT STDMETHODCALLTYPE GetMatrixTransform(
+            DXGI_MATRIX_3X2_F*        pMatrix) final;
+    
+    HRESULT STDMETHODCALLTYPE GetMaximumFrameLatency(
+            UINT*                     pMaxLatency) final;
+    
+    HRESULT STDMETHODCALLTYPE GetSourceSize(
+            UINT*                     pWidth,
+            UINT*                     pHeight) final;
+    
+    HRESULT STDMETHODCALLTYPE SetMatrixTransform(
+      const DXGI_MATRIX_3X2_F*        pMatrix) final;
+    
+    HRESULT STDMETHODCALLTYPE SetMaximumFrameLatency(
+            UINT                      MaxLatency) final;
+
+    HRESULT STDMETHODCALLTYPE SetSourceSize(
+            UINT                      Width,
+            UINT                      Height) final;
+    
+    HRESULT STDMETHODCALLTYPE CheckColorSpaceSupport(
+            DXGI_COLOR_SPACE_TYPE     ColorSpace,
+            UINT*                     pColorSpaceSupport) final;
+
+    HRESULT STDMETHODCALLTYPE SetColorSpace1(
+            DXGI_COLOR_SPACE_TYPE     ColorSpace) final;
 
     HRESULT SetGammaControl(
       const DXGI_GAMMA_CONTROL*       pGammaControl);
@@ -164,6 +204,10 @@ namespace dxvk {
     HRESULT GetSampleCount(
             UINT                    Count,
             VkSampleCountFlagBits*  pCount) const;
+    
+    HRESULT CreatePresenter(
+            IUnknown*               pDevice,
+            IDXGIVkSwapChain**      ppSwapChain);
     
   };
   

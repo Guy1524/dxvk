@@ -16,33 +16,19 @@ namespace dxvk {
     m_desc    (*pDesc),
     m_descFs  (*pFullscreenDesc),
     m_monitor (nullptr) {
-    Com<IDXGIVkPresentDevice> presentDevice;
-
-    // Retrieve a device pointer that allows us to
-    // communicate with the underlying D3D device
-    if (FAILED(pDevice->QueryInterface(__uuidof(IDXGIVkPresentDevice),
-        reinterpret_cast<void**>(&presentDevice))))
-      throw DxvkError("DXGI: DxgiSwapChain: Invalid device");
-    
-    // Retrieve the adapter, which is going
-    // to be used to enumerate displays.
-    Com<IDXGIDevice> device;
-    Com<IDXGIAdapter> adapter;
-    
-    if (FAILED(pDevice->QueryInterface(__uuidof(IDXGIDevice), reinterpret_cast<void**>(&device))))
-      throw DxvkError("DXGI: DxgiSwapChain: Invalid device");
-    
-    if (FAILED(device->GetAdapter(&adapter)))
-      throw DxvkError("DXGI: DxgiSwapChain: Failed to retrieve adapter");
-    
-    m_adapter = static_cast<DxgiAdapter*>(adapter.ptr());
-    
     // Initialize frame statistics
     m_stats.PresentCount         = 0;
     m_stats.PresentRefreshCount  = 0;
     m_stats.SyncRefreshCount     = 0;
     m_stats.SyncQPCTime.QuadPart = 0;
     m_stats.SyncGPUTime.QuadPart = 0;
+    
+    // Create presenter, which also serves as an interface to the device
+    if (FAILED(CreatePresenter(pDevice, &m_presenter)))
+      throw DxvkError("DXGI: Failed to create presenter");
+    
+    if (FAILED(m_presenter->GetAdapter(__uuidof(IDXGIAdapter), reinterpret_cast<void**>(&m_adapter))))
+      throw DxvkError("DXGI: Failed to get adapter for present device");
     
     // Adjust initial back buffer size. If zero, these
     // shall be set to the current window size.
@@ -53,10 +39,7 @@ namespace dxvk {
     
     // Set initial window mode and fullscreen state
     if (!m_descFs.Windowed && FAILED(EnterFullscreenMode(nullptr)))
-      throw DxvkError("DXGI: DxgiSwapChain: Failed to set initial fullscreen state");
-    
-    if (FAILED(presentDevice->CreateSwapChainForHwnd(m_window, &m_desc, &m_presenter)))
-      throw DxvkError("DXGI: DxgiSwapChain: Failed to create presenter");
+      throw DxvkError("DXGI: Failed to set initial fullscreen state");
   }
   
   
@@ -75,7 +58,9 @@ namespace dxvk {
      || riid == __uuidof(IDXGIObject)
      || riid == __uuidof(IDXGIDeviceSubObject)
      || riid == __uuidof(IDXGISwapChain)
-     || riid == __uuidof(IDXGISwapChain1)) {
+     || riid == __uuidof(IDXGISwapChain1)
+     || riid == __uuidof(IDXGISwapChain2)
+     || riid == __uuidof(IDXGISwapChain3)) {
       *ppvObject = ref(this);
       return S_OK;
     }
@@ -98,6 +83,11 @@ namespace dxvk {
   
   HRESULT STDMETHODCALLTYPE DxgiSwapChain::GetBuffer(UINT Buffer, REFIID riid, void** ppSurface) {
     return m_presenter->GetImage(Buffer, riid, ppSurface);
+  }
+
+
+  UINT STDMETHODCALLTYPE DxgiSwapChain::GetCurrentBackBufferIndex() {
+    return m_presenter->GetImageIndex();
   }
   
   
@@ -318,6 +308,24 @@ namespace dxvk {
   }
   
   
+  HRESULT STDMETHODCALLTYPE DxgiSwapChain::ResizeBuffers1(
+          UINT                      BufferCount,
+          UINT                      Width,
+          UINT                      Height,
+          DXGI_FORMAT               Format,
+          UINT                      SwapChainFlags,
+    const UINT*                     pCreationNodeMask,
+          IUnknown* const*          ppPresentQueue) {
+    static bool s_errorShown = false;
+
+    if (!std::exchange(s_errorShown, true))
+      Logger::warn("DxgiSwapChain::ResizeBuffers1: Stub");
+
+    return ResizeBuffers(BufferCount,
+      Width, Height, Format, SwapChainFlags);
+  }
+
+
   HRESULT STDMETHODCALLTYPE DxgiSwapChain::ResizeTarget(const DXGI_MODE_DESC* pNewTargetParameters) {
     std::lock_guard<std::mutex> lock(m_lockWindow);
 
@@ -402,6 +410,84 @@ namespace dxvk {
   }
   
   
+  HANDLE STDMETHODCALLTYPE DxgiSwapChain::GetFrameLatencyWaitableObject() {
+    Logger::err("DxgiSwapChain::GetFrameLatencyWaitableObject: Not implemented");
+    return nullptr;
+  }
+
+
+  HRESULT STDMETHODCALLTYPE DxgiSwapChain::GetMatrixTransform(
+          DXGI_MATRIX_3X2_F*        pMatrix) {
+    // We don't support composition swap chains
+    Logger::err("DxgiSwapChain::GetMatrixTransform: Not supported");
+    return DXGI_ERROR_INVALID_CALL;
+  }
+
+  
+  HRESULT STDMETHODCALLTYPE DxgiSwapChain::GetMaximumFrameLatency(
+          UINT*                     pMaxLatency) {
+    Logger::err("DxgiSwapChain::GetMaximumFrameLatency: Not implemented");
+    return DXGI_ERROR_INVALID_CALL;
+  }
+
+  
+  HRESULT STDMETHODCALLTYPE DxgiSwapChain::GetSourceSize(
+          UINT*                     pWidth,
+          UINT*                     pHeight) {
+    // TODO implement properly once supported
+    if (pWidth)  *pWidth  = m_desc.Width;
+    if (pHeight) *pHeight = m_desc.Height;
+    return S_OK;
+  }
+
+  
+  HRESULT STDMETHODCALLTYPE DxgiSwapChain::SetMatrixTransform(
+    const DXGI_MATRIX_3X2_F*        pMatrix) {
+    // We don't support composition swap chains
+    Logger::err("DxgiSwapChain::SetMatrixTransform: Not supported");
+    return DXGI_ERROR_INVALID_CALL;
+  }
+
+  
+  HRESULT STDMETHODCALLTYPE DxgiSwapChain::SetMaximumFrameLatency(
+          UINT                      MaxLatency) {
+    Logger::err("DxgiSwapChain::SetMaximumFrameLatency: Not implemented");
+    return DXGI_ERROR_INVALID_CALL;
+  }
+
+
+  HRESULT STDMETHODCALLTYPE DxgiSwapChain::SetSourceSize(
+          UINT                      Width,
+          UINT                      Height) {
+    if (Width  == 0 || Width  > m_desc.Width
+     || Height == 0 || Height > m_desc.Height)
+      return E_INVALIDARG;
+
+    RECT region;
+    region.left   = 0;
+    region.top    = 0;
+    region.right  = Width;
+    region.bottom = Height;
+    return m_presenter->SetPresentRegion(&region);
+  }
+  
+
+  HRESULT STDMETHODCALLTYPE DxgiSwapChain::CheckColorSpaceSupport(
+    DXGI_COLOR_SPACE_TYPE           ColorSpace,
+    UINT*                           pColorSpaceSupport) {
+    Logger::err("DxgiSwapChain::CheckColorSpaceSupport: Not implemented");
+
+    *pColorSpaceSupport = 0;
+    return E_NOTIMPL;
+  }
+
+
+  HRESULT DxgiSwapChain::SetColorSpace1(DXGI_COLOR_SPACE_TYPE ColorSpace) {
+    Logger::err("DxgiSwapChain::SetColorSpace1: Not implemented");
+    return E_NOTIMPL;
+  }
+
+
   HRESULT DxgiSwapChain::SetGammaControl(const DXGI_GAMMA_CONTROL* pGammaControl) {
     return m_presenter->SetGammaControl(DXGI_VK_GAMMA_CP_COUNT, pGammaControl->GammaCurve);
   }
@@ -581,6 +667,21 @@ namespace dxvk {
       case  8: *pCount = VK_SAMPLE_COUNT_8_BIT;  return S_OK;
       case 16: *pCount = VK_SAMPLE_COUNT_16_BIT; return S_OK;
     }
+    
+    return E_INVALIDARG;
+  }
+
+
+  HRESULT DxgiSwapChain::CreatePresenter(
+            IUnknown*               pDevice,
+            IDXGIVkSwapChain**      ppSwapChain) {
+    Com<IDXGIVkPresentDevice> presentDevice;
+
+    // Retrieve a device pointer that allows us to
+    // communicate with the underlying D3D device
+    if (SUCCEEDED(pDevice->QueryInterface(__uuidof(IDXGIVkPresentDevice),
+        reinterpret_cast<void**>(&presentDevice))))
+      return presentDevice->CreateSwapChainForHwnd(m_window, &m_desc, ppSwapChain);
     
     return E_INVALIDARG;
   }

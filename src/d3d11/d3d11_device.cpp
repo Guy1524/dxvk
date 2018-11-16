@@ -45,6 +45,7 @@ namespace dxvk {
     if (riid == __uuidof(IDXGIDevice)
      || riid == __uuidof(IDXGIDevice1)
      || riid == __uuidof(IDXGIDevice2)
+     || riid == __uuidof(IDXGIDevice3)
      || riid == __uuidof(IDXGIVkDevice)) {
       *ppvObject = ref(m_dxgiDevice);
       return S_OK;
@@ -103,8 +104,7 @@ namespace dxvk {
     m_dxvkDevice    (pDxgiDevice->GetDXVKDevice()),
     m_dxvkAdapter   (m_dxvkDevice->adapter()),
     m_d3d11Options  (m_dxvkAdapter->instance()->config()),
-    m_dxbcOptions   (getDxbcAppOptions(env::getExeName()) |
-                     getDxbcDeviceOptions(m_dxvkDevice)) {
+    m_dxbcOptions   (m_dxvkDevice) {
     Com<IDXGIAdapter> adapter;
     
     if (FAILED(pDxgiDevice->GetAdapter(&adapter))
@@ -1472,7 +1472,6 @@ namespace dxvk {
       enabled.core.features.tessellationShader                    = VK_TRUE;
       // TODO enable unconditionally once RADV gains support
       enabled.core.features.shaderStorageImageMultisample         = supported.core.features.shaderStorageImageMultisample;
-      enabled.core.features.shaderStorageImageReadWithoutFormat   = supported.core.features.shaderStorageImageReadWithoutFormat;
       enabled.core.features.shaderStorageImageWriteWithoutFormat  = VK_TRUE;
     }
     
