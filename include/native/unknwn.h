@@ -22,12 +22,12 @@ struct IUnknown
         /* Implemented by child interfaces */
     }
 
-    ULONG AddRef()
+    virtual ULONG AddRef()
     {
         return ++m_refCount;
     }
 
-    ULONG Release()
+    virtual ULONG Release()
     {
         m_refCount--;
 
