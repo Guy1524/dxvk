@@ -40,6 +40,7 @@ typedef enum D3D11_FORMAT_SUPPORT2 {
   D3D11_FORMAT_SUPPORT2_MULTIPLANE_OVERLAY                            = 0x4000
 } D3D11_FORMAT_SUPPORT2;
 #ifndef __WINE__
+#ifndef DXVK_NATIVE
 
 //MinGW-Headers supports these typedefs since 6.0.0
 #if !defined(__MINGW64_VERSION_MAJOR) || __MINGW64_VERSION_MAJOR < 6
@@ -98,4 +99,5 @@ typedef struct D3D11_FEATURE_DATA_D3D9_SHADOW_SUPPORT {
 } D3D11_FEATURE_DATA_D3D9_SHADOW_SUPPORT;
 #endif // !defined(__MINGW64_VERSION_MAJOR) || __MINGW64_VERSION_MAJOR < 6
 #endif // __WINE__
+#endif // DXVK_NATIVE
 #endif // _MSC_VER
