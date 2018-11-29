@@ -6,6 +6,8 @@
  * applications, that exposes native Vulkan APIs with win32 additions, but using
  * native ABI.
  */
+#ifndef DXVK_NATIVE
+
 #ifdef __WINE__
 #pragma push_macro("_WIN32")
 #undef _WIN32
@@ -16,6 +18,13 @@
 
 #ifdef __WINE__
 #pragma pop_macro("_WIN32")
+#endif
+
+#else
+
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+
 #endif
 
 #define VULKAN_FN(name) \

@@ -15,6 +15,10 @@ namespace dxvk {
     m_config.merge(Config::getAppConfig(env::getExeName()));
     m_config.logOptions();
 
+#ifdef DXVK_NATIVE
+    glfwInit();
+#endif
+
     g_vrInstance.initInstanceExtensions();
 
     m_vkl = new vk::LibraryFn();
@@ -40,11 +44,15 @@ namespace dxvk {
   VkInstance DxvkInstance::createInstance() {
     DxvkInstanceExtensions insExtensions;
 
-    std::array<DxvkExt*, 3> insExtensionList = {{
+    std::vector<DxvkExt*> insExtensionList = {{
       &insExtensions.khrGetPhysicalDeviceProperties2,
+#ifndef DXVK_NATIVE
       &insExtensions.khrSurface,
       &insExtensions.khrWin32Surface,
+#endif
     }};
+
+
 
     DxvkNameSet extensionsEnabled;
     DxvkNameSet extensionsAvailable = DxvkNameSet::enumInstanceExtensions(m_vkl);
@@ -59,6 +67,21 @@ namespace dxvk {
     extensionsEnabled.merge(g_vrInstance.getInstanceExtensions());
     DxvkNameList extensionNameList = extensionsEnabled.toNameList();
     
+#ifdef DXVK_NATIVE
+    uint32_t len;
+    const char** glfw_required_raw = glfwGetRequiredInstanceExtensions(&len);
+
+    if(!glfw_required_raw)
+      throw DxvkError("DxvkInstance: Failed to create instance");
+
+    DxvkNameSet glfw_required;
+
+    for(uint32_t i = 0; i < len; i++)
+    {
+      glfw_required.add( (const char*) glfw_required_raw[i]);
+    }
+#endif
+
     Logger::info("Enabled instance extensions:");
     this->logNameList(extensionNameList);
 

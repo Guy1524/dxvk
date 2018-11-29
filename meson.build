@@ -47,6 +47,7 @@ if dxvk_winelib
   lib_d3dcompiler_43 = declare_dependency(link_args: [ '-L'+dxvk_library_path, '-ld3dcompiler_43' ])
   lib_d3dcompiler_47 = declare_dependency(link_args: [ '-ld3dcompiler' ])
   lib_dl = declare_dependency(link_args: [ '-ldl' ])
+  lib_glfw3 = dependency('', required : false)
   dxvk_extradep += [ declare_dependency(link_args: [ '-ldl' ]) ]
   exe_ext = '.exe.so'
   dll_ext = '.dll'
@@ -55,6 +56,7 @@ elif dxvk_native
   lib_vulkan = dxvk_compiler.find_library('vulkan', dirs : dxvk_library_path)
   lib_dxgi   = declare_dependency(link_args: ['-ldxgi'])
   lib_dl     = dependency('', required: false)
+  lib_glfw3  = dependency('glfw3', required: true)
   include_dirs += './include/native'
   exe_ext = ''
   dll_ext = ''
@@ -67,6 +69,7 @@ else
   lib_dxgi    = dxvk_compiler.find_library('dxgi')
   lib_d3dcompiler_43 = dxvk_compiler.find_library('d3dcompiler_43', dirs : dxvk_library_path)
   lib_dl = dependency('', required : false)
+  lib_glfw3 = dependency('', required : false)
   
   if dxvk_compiler.get_id() == 'msvc'
     lib_d3dcompiler_47 = dxvk_compiler.find_library('d3dcompiler')
