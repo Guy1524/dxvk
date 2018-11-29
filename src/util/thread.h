@@ -9,19 +9,36 @@
 #include "./rc/util_rc.h"
 #include "./rc/util_rc_ptr.h"
 
+#ifdef DXVK_NATIVE
+#include <pthread.h>
+#include <sched.h>
+#include <sys/sysinfo.h>
+#include <thread>
+#endif
+
 namespace dxvk {
 
   /**
    * \brief Thread priority
    */
+
   enum class ThreadPriority : int32_t {
+#ifndef DXVK_NATIVE
     Lowest      = THREAD_PRIORITY_LOWEST,
     Low         = THREAD_PRIORITY_BELOW_NORMAL,
     Normal      = THREAD_PRIORITY_NORMAL,
     High        = THREAD_PRIORITY_ABOVE_NORMAL,
     Highest     = THREAD_PRIORITY_HIGHEST,
+#else
+    Lowest      = SCHED_BATCH,
+    Low         = SCHED_BATCH,
+    Normal      = SCHED_OTHER,
+    High        = SCHED_RR,
+    Highest     = SCHED_FIFO,
+#endif
   };
 
+#ifndef DXVK_NATIVE
   /**
    * \brief Thread helper class
    * 
@@ -144,4 +161,31 @@ namespace dxvk {
       Sleep(0);
     }
   }
+#else
+
+  class thread : public std::thread {
+
+  public:
+
+    void set_priority(ThreadPriority priority) {
+      struct sched_param params;
+
+      //only used if on High or Highest
+      params.sched_priority = sched_get_priority_max((int32_t) priority);
+
+      pthread_setschedparam(this->native_handle(), (int32_t) priority, &params);
+    }
+
+    static uint32_t hardware_concurrency() {
+      return (uint32_t) get_nprocs();
+    }
+  };
+
+    namespace this_thread {
+    inline void yield() {
+      pthread_yield();
+    }
+  }
+
+#endif
 }
