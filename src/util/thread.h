@@ -167,6 +167,11 @@ namespace dxvk {
 
   public:
 
+    thread() { }
+
+    explicit thread(std::function<void()>&& func)
+    : std::thread(func) {}
+
     void set_priority(ThreadPriority priority) {
       struct sched_param params;
 
