@@ -5,6 +5,10 @@
 #include "dxgi_format.h"
 #include "dxgi_include.h"
 
+#ifdef DXVK_NATIVE
+    #define MIDL_INTERFACE(x) struct
+#endif
+
 namespace dxvk {
   class DxgiAdapter;
   class DxvkAdapter;
@@ -308,7 +312,7 @@ IDXGIVkInteropDevice : public IUnknown {
   virtual void STDMETHODCALLTYPE ReleaseSubmissionQueue() = 0;
 };
 
-
+#ifndef DXVK_NATIVE
 #ifdef _MSC_VER
 struct __declspec(uuid("907bf281-ea3c-43b4-a8e4-9f231107b4ff")) IDXGIVkAdapter;
 struct __declspec(uuid("7a622cf6-627a-46b2-b52f-360ef3da831c")) IDXGIVkDevice;
@@ -325,4 +329,5 @@ DXVK_DEFINE_GUID(IDXGIVkPresentDevice);
 DXVK_DEFINE_GUID(IDXGIVkInteropDevice);
 DXVK_DEFINE_GUID(IDXGIVkInteropSurface);
 DXVK_DEFINE_GUID(IDXGIVkSwapChain);
+#endif
 #endif
