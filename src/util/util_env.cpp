@@ -16,7 +16,9 @@ namespace dxvk::env {
   std::string getEnvVar(const std::string& name) {
 #ifndef DXVK_NATIVE
     int nameLen = ::MultiByteToWideChar(CP_ACP, 0, name.c_str(), name.length() + 1, nullptr, 0);
+
     std::vector<WCHAR> wideName(nameLen);
+
     ::MultiByteToWideChar(CP_ACP, 0, name.c_str(), name.length() + 1, wideName.data(), nameLen);
 
     DWORD len = ::GetEnvironmentVariableW(wideName.data(), nullptr, 0);

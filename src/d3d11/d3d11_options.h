@@ -31,7 +31,7 @@ namespace dxvk {
     /// This can substantially speed up some games, but may
     /// cause issues if the game submits command lists more
     /// than once.
-    bool dcMapSpeedHack;
+    bool dcSingleUseMode;
 
     /// Fakes stream output support.
     /// 
@@ -40,6 +40,12 @@ namespace dxvk {
     /// well enough without it. Will be removed once
     /// Stream Output is properly supported in DXVK.
     bool fakeStreamOutSupport;
+
+    /// Zero-initialize workgroup memory
+    ///
+    /// Workargound for games that don't initialize
+    /// TGSM in compute shaders before reading it.
+    bool zeroInitWorkgroupMemory;
 
     /// Maximum tessellation factor.
     ///

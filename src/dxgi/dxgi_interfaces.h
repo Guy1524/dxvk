@@ -110,47 +110,6 @@ IDXGIVkAdapter : public IDXGIAdapter3 {
           IDXGIObject*              pContainer,
     const dxvk::DxvkDeviceFeatures* pFeatures,
           IDXGIVkDevice**           ppDevice) = 0;
-  
-  /**
-   * \brief Maps a DXGI format to a compatible Vulkan format
-   * 
-   * For color formats, the returned Vulkan format has the
-   * same memory layout as the DXGI format so that it can
-   * be mapped and copied to buffers. For depth-stencil
-   * formats, this is not guaranteed.
-   * \param [in] format The DXGI format
-   * \param [in] mode Format lookup mode
-   * \returns Vulkan format mapping
-   */
-  virtual dxvk::DXGI_VK_FORMAT_INFO STDMETHODCALLTYPE LookupFormat(
-          DXGI_FORMAT               Format,
-          dxvk::DXGI_VK_FORMAT_MODE Mode) = 0;
-  
-  /**
-   * \brief Queries the compatibility family of a given format
-   * 
-   * \param [in] Format The DXGI format
-   * \param [in] Mode Format lookup mode
-   * \returns Format family
-   */
-  virtual dxvk::DXGI_VK_FORMAT_FAMILY STDMETHODCALLTYPE LookupFormatFamily(
-          DXGI_FORMAT               Format,
-          dxvk::DXGI_VK_FORMAT_MODE Mode) = 0;
-};
-
-
-/**
- * \brief Swap chain back buffer interface
- * 
- * Allows the swap chain and presenter to query
- * the underlying image while it is embedded in
- * a texture object specified by the client API.
- */
-MIDL_INTERFACE("5679becd-8547-4d93-96a1-e61a1ce7ef37")
-IDXGIVkBackBuffer : public IUnknown {
-  static const GUID guid;
-  
-  virtual dxvk::Rc<dxvk::DxvkImage> GetDXVKImage() = 0;
 };
 
 
@@ -316,7 +275,6 @@ IDXGIVkInteropDevice : public IUnknown {
 #ifdef _MSC_VER
 struct __declspec(uuid("907bf281-ea3c-43b4-a8e4-9f231107b4ff")) IDXGIVkAdapter;
 struct __declspec(uuid("7a622cf6-627a-46b2-b52f-360ef3da831c")) IDXGIVkDevice;
-struct __declspec(uuid("5679becd-8547-4d93-96a1-e61a1ce7ef37")) IDXGIVkBackBuffer;
 struct __declspec(uuid("79352328-16f2-4f81-9746-9c2e2ccd43cf")) IDXGIVkPresentDevice;
 struct __declspec(uuid("e2ef5fa5-dc21-4af7-90c4-f67ef6a09323")) IDXGIVkInteropDevice;
 struct __declspec(uuid("5546cf8c-77e7-4341-b05d-8d4d5000e77d")) IDXGIVkInteropSurface;
@@ -324,7 +282,6 @@ struct __declspec(uuid("104001a6-7f36-4957-b932-86ade9567d91")) IDXGIVkSwapChain
 #else
 DXVK_DEFINE_GUID(IDXGIVkAdapter);
 DXVK_DEFINE_GUID(IDXGIVkDevice);
-DXVK_DEFINE_GUID(IDXGIVkBackBuffer);
 DXVK_DEFINE_GUID(IDXGIVkPresentDevice);
 DXVK_DEFINE_GUID(IDXGIVkInteropDevice);
 DXVK_DEFINE_GUID(IDXGIVkInteropSurface);

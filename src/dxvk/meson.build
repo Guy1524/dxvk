@@ -54,7 +54,6 @@ dxvk_src = files([
   'dxvk_device_filter.cpp',
   'dxvk_extensions.cpp',
   'dxvk_event.cpp',
-  'dxvk_event_tracker.cpp',
   'dxvk_format.cpp',
   'dxvk_framebuffer.cpp',
   'dxvk_graphics.cpp',
@@ -87,9 +86,6 @@ dxvk_src = files([
   'dxvk_staging.cpp',
   'dxvk_state_cache.cpp',
   'dxvk_stats.cpp',
-  'dxvk_surface.cpp',
-  'dxvk_swapchain.cpp',
-  'dxvk_sync.cpp',
   'dxvk_unbound.cpp',
   'dxvk_util.cpp',
   

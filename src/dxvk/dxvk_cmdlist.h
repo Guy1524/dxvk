@@ -5,14 +5,13 @@
 #include "dxvk_bind_mask.h"
 #include "dxvk_buffer.h"
 #include "dxvk_descriptor.h"
-#include "dxvk_event_tracker.h"
+#include "dxvk_event.h"
 #include "dxvk_lifetime.h"
 #include "dxvk_limits.h"
 #include "dxvk_pipelayout.h"
 #include "dxvk_query_tracker.h"
 #include "dxvk_staging.h"
 #include "dxvk_stats.h"
-#include "dxvk_sync.h"
 
 namespace dxvk {
   
@@ -156,6 +155,14 @@ namespace dxvk {
     void trackEvent(const DxvkEventRevision& event) {
       m_eventTracker.trackEvent(event);
     }
+
+    /**
+     * \brief Tracks a descriptor pool
+     * \param [in] pool The descriptor pool
+     */
+    void trackDescriptorPool(Rc<DxvkDescriptorPool> pool) {
+      m_descriptorPoolTracker.trackDescriptorPool(pool);
+    }
     
     /**
      * \brief Signals tracked events
@@ -187,12 +194,6 @@ namespace dxvk {
      * the command list completes execution.
      */
     void reset();
-    
-    VkDescriptorSet allocateDescriptorSet(
-            VkDescriptorSetLayout   descriptorLayout) {
-      return m_descAlloc.alloc(descriptorLayout);
-    }
-    
     
     void updateDescriptorSets(
             uint32_t                      descriptorWriteCount,
@@ -656,7 +657,7 @@ namespace dxvk {
     
     DxvkCmdBufferFlags  m_cmdBuffersUsed;
     DxvkLifetimeTracker m_resources;
-    DxvkDescriptorAlloc m_descAlloc;
+    DxvkDescriptorPoolTracker m_descriptorPoolTracker;
     DxvkStagingAlloc    m_stagingAlloc;
     DxvkQueryTracker    m_queryTracker;
     DxvkEventTracker    m_eventTracker;

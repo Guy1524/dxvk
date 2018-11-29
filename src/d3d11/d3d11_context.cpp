@@ -10,11 +10,13 @@
 namespace dxvk {
   
   D3D11DeviceContext::D3D11DeviceContext(
-          D3D11Device*    pParent,
-    const Rc<DxvkDevice>& Device)
+          D3D11Device*            pParent,
+    const Rc<DxvkDevice>&         Device,
+          DxvkCsChunkFlags        CsFlags)
   : m_parent    (pParent),
     m_annotation(this),
     m_device    (Device),
+    m_csFlags   (CsFlags),
     m_csChunk   (AllocCsChunk()) {
     // Create default state objects. We won't ever return them
     // to the application, but we'll use them to apply state.
@@ -2974,8 +2976,8 @@ namespace dxvk {
   
   void D3D11DeviceContext::BindUnorderedAccessView(
           UINT                              UavSlot,
-          UINT                              CtrSlot,
           D3D11UnorderedAccessView*         pUav,
+          UINT                              CtrSlot,
           UINT                              Counter) {
     EmitCs([
       cUavSlotId    = UavSlot,
@@ -3127,11 +3129,14 @@ namespace dxvk {
     
     for (uint32_t i = 0; i < NumUAVs; i++) {
       auto uav = static_cast<D3D11UnorderedAccessView*>(ppUnorderedAccessViews[i]);
+      auto ctr = pUAVInitialCounts ? pUAVInitialCounts[i] : ~0u;
       
-      if (Bindings[StartSlot + i] != uav) {
+      if (Bindings[StartSlot + i] != uav || ctr != ~0u) {
         Bindings[StartSlot + i] = uav;
-        BindUnorderedAccessView(uavSlotId + i, ctrSlotId + i, uav,
-          pUAVInitialCounts ? pUAVInitialCounts[i] : ~0u);
+        
+        BindUnorderedAccessView(
+          uavSlotId + i, uav,
+          ctrSlotId + i, ctr);
       }
     }
   }
@@ -3283,8 +3288,9 @@ namespace dxvk {
     
     for (uint32_t i = 0; i < Bindings.size(); i++) {
       BindUnorderedAccessView(
-        uavSlotId + i, ctrSlotId + i,
-        Bindings[i].ptr(), ~0u);
+        uavSlotId + i,
+        Bindings[i].ptr(),
+        ctrSlotId + i, ~0u);
     }
   }
   
@@ -3350,7 +3356,7 @@ namespace dxvk {
   
   
   DxvkCsChunkRef D3D11DeviceContext::AllocCsChunk() {
-    return m_parent->AllocCsChunk();
+    return m_parent->AllocCsChunk(m_csFlags);
   }
   
 }

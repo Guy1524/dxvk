@@ -719,6 +719,10 @@ namespace dxvk {
       if (info.sclass == spv::StorageClassOutput) {
         m_module.decorateLocation(varId, regIdx);
         m_entryPointInterfaces.push_back(varId);
+
+        // Add index decoration for potential dual-source blending
+        if (m_programInfo.type() == DxbcProgramType::PixelShader)
+          m_module.decorateIndex(varId, 0);
       }
       
       m_oRegs.at(regIdx) = { regType, varId };
@@ -1301,6 +1305,10 @@ namespace dxvk {
     //    (imm0) Number of threads in X dimension
     //    (imm1) Number of threads in Y dimension
     //    (imm2) Number of threads in Z dimension
+    m_cs.workgroupSizeX = ins.imm[0].u32;
+    m_cs.workgroupSizeY = ins.imm[1].u32;
+    m_cs.workgroupSizeZ = ins.imm[2].u32;
+
     m_module.setLocalSize(m_entryPointId,
       ins.imm[0].u32, ins.imm[1].u32, ins.imm[2].u32);
   }
@@ -3888,6 +3896,36 @@ namespace dxvk {
       uint32_t killState = m_module.opLoad     (typeId, m_ps.killState);
                killState = m_module.opLogicalOr(typeId, killState, zeroTest.id);
       m_module.opStore(m_ps.killState, killState);
+
+      if (m_moduleInfo.options.useSubgroupOpsForEarlyDiscard) {
+        uint32_t ballot = m_module.opGroupNonUniformBallot(
+          getVectorTypeId({ DxbcScalarType::Uint32, 4 }),
+          m_module.constu32(spv::ScopeSubgroup),
+          killState);
+        
+        uint32_t invocationMask = m_module.opLoad(
+          getVectorTypeId({ DxbcScalarType::Uint32, 4 }),
+          m_ps.invocationMask);
+        
+        uint32_t killSubgroup = m_module.opAll(
+          m_module.defBoolType(),
+          m_module.opIEqual(
+            m_module.defVectorType(m_module.defBoolType(), 4),
+            ballot, invocationMask));
+        
+        DxbcConditional cond;
+        cond.labelIf  = m_module.allocateId();
+        cond.labelEnd = m_module.allocateId();
+        
+        m_module.opSelectionMerge(cond.labelEnd, spv::SelectionControlMaskNone);
+        m_module.opBranchConditional(killSubgroup, cond.labelIf, cond.labelEnd);
+        
+        // OpKill terminates the block
+        m_module.opLabel(cond.labelIf);
+        m_module.opKill();
+        
+        m_module.opLabel(cond.labelEnd);
+      }
     }
   }
   
@@ -5102,7 +5140,7 @@ namespace dxvk {
         result.id = m_module.constu32(reg.imm.u32_1);
       } else if (reg.componentCount == DxbcComponentCount::Component4) {
         // Create a u32 vector with as many components as needed
-        std::array<uint32_t, 4> indices;
+        std::array<uint32_t, 4> indices = { };
         uint32_t indexId = 0;
         
         for (uint32_t i = 0; i < indices.size(); i++) {
@@ -5362,8 +5400,117 @@ namespace dxvk {
         DxbcRegMask::firstN(vector.type.ccount));
     }
   }
+
+
+  void DxbcCompiler::emitOutputDepthClamp() {
+    // HACK: Some drivers do not clamp FragDepth to [minDepth..maxDepth]
+    // before writing to the depth attachment, but we do not have acccess
+    // to those. Clamp to [0..1] instead.
+    if (m_ps.builtinDepth) {
+      DxbcRegisterPointer ptr;
+      ptr.type = { DxbcScalarType::Float32, 1 };
+      ptr.id = m_ps.builtinDepth;
+
+      DxbcRegisterValue value = emitValueLoad(ptr);
+
+      value.id = m_module.opFClamp(
+        getVectorTypeId(ptr.type),
+        value.id,
+        m_module.constf32(0.0f),
+        m_module.constf32(1.0f));
+      
+      emitValueStore(ptr, value,
+        DxbcRegMask::firstN(1));
+    }
+  }
   
   
+  void DxbcCompiler::emitInitWorkgroupMemory() {
+    bool hasTgsm = false;
+
+    for (uint32_t i = 0; i < m_gRegs.size(); i++) {
+      if (!m_gRegs[i].varId)
+        continue;
+      
+      if (!m_cs.builtinLocalInvocationIndex) {
+        m_cs.builtinLocalInvocationIndex = emitNewBuiltinVariable({
+          { DxbcScalarType::Uint32, 1, 0 },
+          spv::StorageClassInput },
+          spv::BuiltInLocalInvocationIndex,
+          "vThreadIndexInGroup");
+      }
+
+      uint32_t intTypeId = getScalarTypeId(DxbcScalarType::Uint32);
+      uint32_t ptrTypeId = m_module.defPointerType(
+        intTypeId, spv::StorageClassWorkgroup);
+
+      uint32_t numElements = m_gRegs[i].type == DxbcResourceType::Structured
+        ? m_gRegs[i].elementCount * m_gRegs[i].elementStride / 4
+        : m_gRegs[i].elementCount / 4;
+      
+      uint32_t numThreads = m_cs.workgroupSizeX *
+        m_cs.workgroupSizeY * m_cs.workgroupSizeZ;
+      
+      uint32_t numElementsPerThread = numElements / numThreads;
+      uint32_t numElementsRemaining = numElements % numThreads;
+
+      uint32_t threadId = m_module.opLoad(
+        intTypeId, m_cs.builtinLocalInvocationIndex);
+      
+      uint32_t strideId = m_module.constu32(numElementsPerThread);
+      uint32_t zeroId   = m_module.constu32(0);
+
+      for (uint32_t e = 0; e < numElementsPerThread; e++) {
+        uint32_t ofsId = m_module.opIAdd(intTypeId,
+          m_module.opIMul(intTypeId, strideId, threadId),
+          m_module.constu32(e));
+        
+        uint32_t ptrId = m_module.opAccessChain(
+          ptrTypeId, m_gRegs[i].varId, 1, &ofsId);
+
+        m_module.opStore(ptrId, zeroId);
+      }
+
+      if (numElementsRemaining) {
+        uint32_t condition = m_module.opULessThan(
+          m_module.defBoolType(), threadId,
+          m_module.constu32(numElementsRemaining));
+        
+        DxbcConditional cond;
+        cond.labelIf  = m_module.allocateId();
+        cond.labelEnd = m_module.allocateId();
+
+        m_module.opSelectionMerge(cond.labelEnd, spv::SelectionControlMaskNone);
+        m_module.opBranchConditional(condition, cond.labelIf, cond.labelEnd);
+
+        m_module.opLabel(cond.labelIf);
+
+        uint32_t ofsId = m_module.opIAdd(intTypeId,
+          m_module.constu32(numThreads * numElementsPerThread),
+          threadId);
+        
+        uint32_t ptrId = m_module.opAccessChain(
+          ptrTypeId, m_gRegs[i].varId, 1, &ofsId);
+        
+        m_module.opStore(ptrId, zeroId);
+
+        m_module.opBranch(cond.labelEnd);
+        m_module.opLabel (cond.labelEnd);
+      }
+
+      hasTgsm = true;
+    }
+
+    if (hasTgsm) {
+      m_module.opControlBarrier(
+        m_module.constu32(spv::ScopeInvocation),
+        m_module.constu32(spv::ScopeWorkgroup),
+        m_module.constu32(spv::MemorySemanticsWorkgroupMemoryMask
+                        | spv::MemorySemanticsAcquireReleaseMask));
+    }
+  }
+
+
   DxbcRegisterValue DxbcCompiler::emitVsSystemValueLoad(
           DxbcSystemValue         sv,
           DxbcRegMask             mask) {
@@ -6154,16 +6301,6 @@ namespace dxvk {
       spv::BuiltInCullDistance,
       spv::StorageClassInput);
     
-    // We may have to defer kill operations to the end of
-    // the shader in order to keep derivatives correct.
-    if (m_analysis->usesKill && m_analysis->usesDerivatives && m_moduleInfo.options.deferKill) {
-      m_ps.killState = m_module.newVarInit(
-        m_module.defPointerType(m_module.defBoolType(), spv::StorageClassPrivate),
-        spv::StorageClassPrivate, m_module.constBool(false));
-      
-      m_module.setDebugName(m_ps.killState, "ps_kill");
-    }
-    
     // Main function of the pixel shader
     m_ps.functionId = m_module.allocateId();
     m_module.setDebugName(m_ps.functionId, "ps_main");
@@ -6174,6 +6311,34 @@ namespace dxvk {
       m_module.defFunctionType(
         m_module.defVoidType(), 0, nullptr));
     this->emitFunctionLabel();
+
+    // We may have to defer kill operations to the end of
+    // the shader in order to keep derivatives correct.
+    if (m_analysis->usesKill && m_analysis->usesDerivatives) {
+      m_ps.killState = m_module.newVarInit(
+        m_module.defPointerType(m_module.defBoolType(), spv::StorageClassPrivate),
+        spv::StorageClassPrivate, m_module.constBool(false));
+      
+      m_module.setDebugName(m_ps.killState, "ps_kill");
+
+      if (m_moduleInfo.options.useSubgroupOpsForEarlyDiscard) {
+        m_module.enableCapability(spv::CapabilityGroupNonUniform);
+        m_module.enableCapability(spv::CapabilityGroupNonUniformBallot);
+
+        DxbcRegisterInfo invocationMask;
+        invocationMask.type = { DxbcScalarType::Uint32, 4, 0 };
+        invocationMask.sclass = spv::StorageClassFunction;
+
+        m_ps.invocationMask = emitNewVariable(invocationMask);
+        m_module.setDebugName(m_ps.invocationMask, "fInvocationMask");
+        
+        m_module.opStore(m_ps.invocationMask,
+          m_module.opGroupNonUniformBallot(
+            getVectorTypeId({ DxbcScalarType::Uint32, 4 }),
+            m_module.constu32(spv::ScopeSubgroup),
+            m_module.constBool(true)));
+      }
+    }
   }
   
   
@@ -6283,15 +6448,21 @@ namespace dxvk {
     
     this->emitOutputSetup();
     this->emitOutputMapping();
+    this->emitOutputDepthClamp();
     this->emitFunctionEnd();
   }
   
   
   void DxbcCompiler::emitCsFinalize() {
     this->emitMainFunctionBegin();
+
+    if (m_moduleInfo.options.zeroInitWorkgroupMemory)
+      this->emitInitWorkgroupMemory();
+
     m_module.opFunctionCall(
       m_module.defVoidType(),
       m_cs.functionId, 0, nullptr);
+    
     this->emitFunctionEnd();
   }
   

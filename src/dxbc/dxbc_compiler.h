@@ -178,6 +178,7 @@ namespace dxvk {
     uint32_t builtinLayer         = 0;
     uint32_t builtinViewportId    = 0;
     
+    uint32_t invocationMask       = 0;
     uint32_t killState            = 0;
   };
   
@@ -187,6 +188,10 @@ namespace dxvk {
    */
   struct DxbcCompilerCsPart {
     uint32_t functionId = 0;
+
+    uint32_t workgroupSizeX               = 0;
+    uint32_t workgroupSizeY               = 0;
+    uint32_t workgroupSizeZ               = 0;
     
     uint32_t builtinGlobalInvocationId    = 0;
     uint32_t builtinLocalInvocationId     = 0;
@@ -985,7 +990,10 @@ namespace dxvk {
     
     void emitOutputSetup();
     void emitOutputMapping();
+    void emitOutputDepthClamp();
     
+    void emitInitWorkgroupMemory();
+
     //////////////////////////////////////////
     // System value load methods (per shader)
     DxbcRegisterValue emitVsSystemValueLoad(

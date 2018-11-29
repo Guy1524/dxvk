@@ -3,7 +3,6 @@
 #include "dxvk_adapter.h"
 #include "dxvk_device.h"
 #include "dxvk_instance.h"
-#include "dxvk_surface.h"
 
 namespace dxvk {
   
@@ -212,7 +211,8 @@ namespace dxvk {
   Rc<DxvkDevice> DxvkAdapter::createDevice(DxvkDeviceFeatures enabledFeatures) {
     DxvkDeviceExtensions devExtensions;
 
-    std::array<DxvkExt*, 12> devExtensionList = {{
+    std::array<DxvkExt*, 13> devExtensionList = {{
+      &devExtensions.amdMemoryOverallocationBehaviour,
       &devExtensions.extShaderViewportIndexLayer,
       &devExtensions.extTransformFeedback,
       &devExtensions.extVertexAttributeDivisor,
@@ -254,6 +254,15 @@ namespace dxvk {
       enabledFeatures.extVertexAttributeDivisor.pNext = enabledFeatures.core.pNext;
       enabledFeatures.core.pNext = &enabledFeatures.extVertexAttributeDivisor;
     }
+
+    // Report the desired overallocation behaviour to the driver
+    VkDeviceMemoryOverallocationCreateInfoAMD overallocInfo;
+    overallocInfo.sType = VK_STRUCTURE_TYPE_DEVICE_MEMORY_OVERALLOCATION_CREATE_INFO_AMD;
+    overallocInfo.pNext = nullptr;
+    overallocInfo.overallocationBehavior = VK_MEMORY_OVERALLOCATION_BEHAVIOR_DISALLOWED_AMD;
+
+    if (m_instance->options().allowMemoryOvercommit)
+      overallocInfo.overallocationBehavior = VK_MEMORY_OVERALLOCATION_BEHAVIOR_ALLOWED_AMD;
     
     // Create one single queue for graphics and present
     float queuePriority = 1.0f;
@@ -288,6 +297,9 @@ namespace dxvk {
     info.enabledExtensionCount      = extensionNameList.count();
     info.ppEnabledExtensionNames    = extensionNameList.names();
     info.pEnabledFeatures           = &enabledFeatures.core.features;
+
+    if (devExtensions.amdMemoryOverallocationBehaviour)
+      overallocInfo.pNext = std::exchange(info.pNext, &overallocInfo);
     
     VkDevice device = VK_NULL_HANDLE;
     
@@ -302,11 +314,6 @@ namespace dxvk {
   }
   
   
-  Rc<DxvkSurface> DxvkAdapter::createSurface(HINSTANCE instance, HWND window) {
-    return new DxvkSurface(this, instance, window);
-  }
-
-
   void DxvkAdapter::notifyHeapMemoryAlloc(
           uint32_t            heap,
           VkDeviceSize        bytes) {
@@ -369,6 +376,14 @@ namespace dxvk {
     m_deviceInfo.core.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2_KHR;
     m_deviceInfo.core.pNext = nullptr;
 
+    // Query info now so that we have basic device properties available
+    m_vki->vkGetPhysicalDeviceProperties2KHR(m_handle, &m_deviceInfo.core);
+
+    if (m_deviceInfo.core.properties.apiVersion >= VK_MAKE_VERSION(1, 1, 0)) {
+      m_deviceInfo.coreSubgroup.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SUBGROUP_PROPERTIES;
+      m_deviceInfo.coreSubgroup.pNext = std::exchange(m_deviceInfo.core.pNext, &m_deviceInfo.coreSubgroup);
+    }
+
     if (m_deviceExtensions.supports(VK_EXT_TRANSFORM_FEEDBACK_EXTENSION_NAME)) {
       m_deviceInfo.extTransformFeedback.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_TRANSFORM_FEEDBACK_PROPERTIES_EXT;
       m_deviceInfo.extTransformFeedback.pNext = std::exchange(m_deviceInfo.core.pNext, &m_deviceInfo.extTransformFeedback);
@@ -379,6 +394,7 @@ namespace dxvk {
       m_deviceInfo.extVertexAttributeDivisor.pNext = std::exchange(m_deviceInfo.core.pNext, &m_deviceInfo.extVertexAttributeDivisor);
     }
 
+    // Query full device properties for all enabled extensions
     m_vki->vkGetPhysicalDeviceProperties2KHR(m_handle, &m_deviceInfo.core);
     
     // Nvidia reports the driver version in a slightly different format

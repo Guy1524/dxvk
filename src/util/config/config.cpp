@@ -19,11 +19,6 @@ namespace dxvk {
     { "Dishonored2.exe", {{
       { "d3d11.allowMapFlagNoWait",         "True" }
     }} },
-    /* Dragon Quest 2 - keeps searching for NVAPI */
-    { "DRAGON QUEST XI.exe", {{
-      { "dxgi.customVendorId",              "1002" },
-      { "dxgi.customDeviceId",              "e366" },
-    }} },
     /* Elite Dangerous                            */
     { "EliteDangerous64.exe", {{
       { "dxgi.customVendorId",              "10de" },
@@ -34,11 +29,11 @@ namespace dxvk {
     }} },
     /* The Evil Within                            */
     { "EvilWithin.exe", {{
-      { "d3d11.dcMapSpeedHack",             "False" },
+      { "d3d11.dcSingleUseMode",            "False" },
     }} },
     /* The Evil Within Demo                       */
     { "EvilWithinDemo.exe", {{
-      { "d3d11.dcMapSpeedHack",             "False" },
+      { "d3d11.dcSingleUseMode",            "False" },
     }} },
     /* F1 2015                                    */
     { "F1_2015.exe", {{
@@ -56,16 +51,6 @@ namespace dxvk {
     { "Frostpunk.exe", {{
       { "dxgi.deferSurfaceCreation",        "True" },
     }} },
-    /* Grand Theft Auto V                         */
-    { "GTA5.exe", {{
-      { "dxgi.customVendorId",              "1002" },
-      { "dxgi.customDeviceId",              "e366" },
-    }} },
-    /* Batman: Arkham Knight                      */
-    { "BatmanAK.exe", {{
-      { "dxgi.customVendorId",              "1002" },
-      { "dxgi.customDeviceId",              "e366" },
-    }} },
     /* Mafia 3                                    */
     { "mafia3.exe", {{
       { "d3d11.fakeStreamOutSupport",       "True" },
@@ -74,30 +59,17 @@ namespace dxvk {
     { "Overwatch.exe", {{
       { "d3d11.fakeStreamOutSupport",       "True" },
     }} },
-    /* Star Citizen                               */
-    { "StarCitizen.exe", {{
-      { "dxgi.customVendorId",              "1002" },
-      { "dxgi.customDeviceId",              "e366" },
+    /* Quantum Break                              */
+    { "QuantumBreak.exe", {{
+      { "d3d11.zeroInitWorkgroupMemory",    "True" },
     }} },
-    /* Dauntless                                  */
-    { "Dauntless-Win64-Shipping.exe", {{
-      { "dxgi.customVendorId",              "1002" },
-      { "dxgi.customDeviceId",              "e366" },
+    /* Anno 2205                                  */
+    { "anno2205.exe", {{
+      { "dxvk.enableStateCache",            "False" },
     }} },
-    /* Redout                                     */
-    { "redout-Win64-Shipping.exe", {{
-      { "dxgi.customVendorId",              "1002" },
-      { "dxgi.customDeviceId",              "e366" },
-    }} },
-    /* Sword Art Online Fatal Bullet              */
-    { "SAOFB-Win64-Shipping.exe", {{
-      { "dxgi.customVendorId",              "1002" },
-      { "dxgi.customDeviceId",              "e366" },
-    }} },
-    /* Assetto Corsa Competizione                 */
-    { "AC2-Win64-Shipping.exe", {{
-      { "dxgi.customVendorId",              "1002" },
-      { "dxgi.customDeviceId",              "e366" },
+    /* Battlefield 1                              */
+    { "bf1.exe", {{
+      { "dxgi.customVendorId",              "10de" },
     }} },
   }};
 
