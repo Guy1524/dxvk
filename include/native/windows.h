@@ -65,7 +65,13 @@ typedef char *LPSTR;
 typedef LONG HRESULT;
 
 #define S_OK          0
+#define S_FALSE       (HRESULT) 1
 #define E_NOINTERFACE 0x80004002
+#define E_INVALIDARG  (HRESULT) 0x80070057
+
+
+#define DXGI_ERROR_NOT_FOUND (HRESULT) 0x887a0002
+#define DXGI_ERROR_MORE_DATA (HRESULT) 0x887a0003
 
 // COM
 #define __uuidof(iface)  iface::guid
@@ -84,10 +90,19 @@ struct GUID{
             && (uint64_t)this->Data4 == (uint64_t)other.Data4;
     
     }
+
+    bool operator ==(const GUID* other) const
+    {
+        return this->Data1 == other->Data1
+            && this->Data2 == other->Data2
+            && this->Data3 == other->Data3
+            && (uint64_t)this->Data4 == (uint64_t)other->Data4;
+    
+    }
 };
 
 typedef const GUID& REFIID;
-typedef GUID* REFGUID;
+#define REFGUID const GUID &
 
 // misc.
 typedef wchar_t WCHAR;
