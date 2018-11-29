@@ -6,10 +6,10 @@
 #include <atomic>
 #include <inttypes.h>
 
-const GUID IUnknown_GUID = {0x00000000,0x0000,0x0000,{0xC0,0x00,0x00,0x00,0x00,0x00,0x00,0x46}};
-
 struct IUnknown
 {
+    static const GUID guid;
+
     std::atomic<uint32_t> m_refCount;
 
     IUnknown()
@@ -53,5 +53,6 @@ struct IUnknown
         return E_NOINTERFACE;
     }
 };
+const GUID IUnknown::guid = {0x00000000,0x0000,0x0000,{0xC0,0x00,0x00,0x00,0x00,0x00,0x00,0x46}};
 
 #endif

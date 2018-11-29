@@ -68,7 +68,7 @@ typedef LONG HRESULT;
 #define E_NOINTERFACE 0x80004002
 
 // COM
-#define __uuidof(iface)  iface ## _GUID
+#define __uuidof(iface)  iface::guid
 
 struct GUID{
     DWORD Data1;

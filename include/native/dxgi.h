@@ -119,9 +119,10 @@ typedef struct DXGI_SHARED_RESOURCE {
     HANDLE Handle;
 } DXGI_SHARED_RESOURCE;
 
-const GUID IDXGIObject_GUID = {0xaec22fb8,0x76f3,0x4639,{0x9b,0xe0,0x28,0xeb,0x43,0xa6,0x7a,0x2e}};
 struct IDXGIObject : public IUnknown
 {
+    static const GUID guid;
+
     virtual HRESULT SetPrivateData(
         /*in*/ REFGUID guid,
         /*in*/ UINT data_size,
@@ -141,35 +142,43 @@ struct IDXGIObject : public IUnknown
         /*out*/ void **parent
     );
 };
+const GUID IDXGIObject::guid = {0xaec22fb8,0x76f3,0x4639,{0x9b,0xe0,0x28,0xeb,0x43,0xa6,0x7a,0x2e}};
 
-const GUID IDXGIDeviceSubObject_GUID = {0x3d3e0379,0xf9de,0x4d58,{0xbb,0x6c,0x18,0xd6,0x29,0x92,0xf1,0xa6}};
 struct IDXGIDeviceSubObject : public IDXGIObject
 {
+    static const GUID guid;
+
     virtual HRESULT GetDevice(
         /*in*/ REFIID riid,
         /*out*/ void **device
     );
 };
+const GUID IDXGIDeviceSubObject::guid = {0x3d3e0379,0xf9de,0x4d58,{0xbb,0x6c,0x18,0xd6,0x29,0x92,0xf1,0xa6}};
 
-const GUID IDXGIResource_GUID = {0x035f3ab4,0x482e,0x4e50,{0xb4,0x1f,0x8a,0x7f,0x8b,0xd8,0x96,0x0b}};
 struct IDXGIResource : public IDXGIDeviceSubObject
 {
+    static const GUID guid;
+
     virtual HRESULT GetSharedHandle(/*out*/ HANDLE *pSharedHandle);
     virtual HRESULT GetUsage(/*out*/ DXGI_USAGE *pUsage);
     virtual HRESULT SetEvictionPriority(/*in*/ UINT EvictionPriority);
     virtual HRESULT GetEvictionPriority(/*out*/ UINT *pEvictionPriority);
 };
+const GUID IDXGIResource::guid = {0x035f3ab4,0x482e,0x4e50,{0xb4,0x1f,0x8a,0x7f,0x8b,0xd8,0x96,0x0b}};
 
-const GUID IDXGIKeyedMutex_GUID = {0x9d8e1289,0xd7b3,0x465f,{0x81,0x26,0x25,0x0e,0x34,0x9a,0xf8,0x5d}};
 struct IDXGIKeyedMutex : public IDXGIDeviceSubObject
 {
+    static const GUID guid;
+
     virtual HRESULT AcquireSync(/*in*/ UINT64 Key, /*in*/ DWORD dwMilliseconds);
     virtual HRESULT ReleaseSync(/*in*/ UINT64 Key);
 };
+const GUID IDXGIKeyedMutex::guid = {0x9d8e1289,0xd7b3,0x465f,{0x81,0x26,0x25,0x0e,0x34,0x9a,0xf8,0x5d}};
 
-const GUID IDXGISurface_GUID = {0xcafcb56c,0x6ac3,0x4889,{0xbf,0x47,0x9e,0x23,0xbb,0xd2,0x60,0xec}};
 struct IDXGISurface : public IDXGIDeviceSubObject
 {
+    static const GUID guid;
+
     virtual HRESULT GetDesc(
         /*out*/ DXGI_SURFACE_DESC *desc
     );
@@ -180,10 +189,12 @@ struct IDXGISurface : public IDXGIDeviceSubObject
     virtual HRESULT Unmap(
     );
 };
+const GUID IDXGISurface::guid = {0xcafcb56c,0x6ac3,0x4889,{0xbf,0x47,0x9e,0x23,0xbb,0xd2,0x60,0xec}};
 
-const GUID IDXGISurface1_GUID = {0x4ae63092,0x6327,0x4c1b,{0x80,0xae,0xbf,0xe1,0x2e,0xa3,0x2b,0x86}};
 struct IDXGISurface1 : public IDXGISurface
 {
+    static const GUID guid;
+
     virtual HRESULT GetDC(
         /*in*/ BOOL discard,
         /*out*/ HDC *hdc
@@ -192,10 +203,12 @@ struct IDXGISurface1 : public IDXGISurface
         /*in*/ RECT *dirty_rect
     );
 };
+const GUID IDXGISurface1::guid = {0x4ae63092,0x6327,0x4c1b,{0x80,0xae,0xbf,0xe1,0x2e,0xa3,0x2b,0x86}};
 
-const GUID IDXGIOutput_GUID = {0xae02eedb,0xc735,0x4690,{0x8d,0x52,0x5a,0x8d,0xc2,0x02,0x13,0xaa}};
 struct IDXGIOutput : public IDXGIObject
 {
+    static const GUID guid;
+
     virtual HRESULT GetDesc(
         /*out*/ DXGI_OUTPUT_DESC *desc
     );
@@ -237,10 +250,12 @@ struct IDXGIOutput : public IDXGIObject
         /*out*/ DXGI_FRAME_STATISTICS *stats
     );
 };
+const GUID IDXGIOutput::guid = {0xae02eedb,0xc735,0x4690,{0x8d,0x52,0x5a,0x8d,0xc2,0x02,0x13,0xaa}};
 
-const GUID IDXGIAdapter_GUID = {0x2411e7e1,0x12ac,0x4ccf,{0xbd,0x14,0x97,0x98,0xe8,0x53,0x4d,0xc0}};
 struct IDXGIAdapter : public IDXGIObject
 {
+    static const GUID guid;
+
     virtual HRESULT EnumOutputs(
         /*in*/ UINT output_idx,
         /*inout*/ IDXGIOutput **output
@@ -253,6 +268,7 @@ struct IDXGIAdapter : public IDXGIObject
         /*out*/ LARGE_INTEGER *umd_version
     );
 };
+const GUID IDXGIAdapter::guid = {0x2411e7e1,0x12ac,0x4ccf,{0xbd,0x14,0x97,0x98,0xe8,0x53,0x4d,0xc0}};
 
 #define DXGI_MAX_SWAP_CHAIN_BUFFERS  (16)
 
@@ -266,9 +282,10 @@ struct IDXGIAdapter : public IDXGIObject
 #define DXGI_PRESENT_USE_DURATION           __MSABI_LONG(0x00000100U)
 #define DXGI_PRESENT_ALLOW_TEARING          __MSABI_LONG(0x00000200U)
 
-const GUID IDXGISwapChain_GUID = {0x310d36a0,0xd2e7,0x4c0a,{0xaa,0x04,0x6a,0x9d,0x23,0xb8,0x88,0x6a}};
 struct IDXGISwapChain : public IDXGIDeviceSubObject
 {
+    static const GUID guid;
+
     virtual HRESULT Present(
         /*in*/ UINT sync_interval,
         /*in*/ UINT flags
@@ -309,15 +326,17 @@ struct IDXGISwapChain : public IDXGIDeviceSubObject
         /*out*/ UINT *last_present_count
     );
 };
+const GUID IDXGISwapChain::guid = {0x310d36a0,0xd2e7,0x4c0a,{0xaa,0x04,0x6a,0x9d,0x23,0xb8,0x88,0x6a}};
 
 #define DXGI_MWA_NO_WINDOW_CHANGES  0x1
 #define DXGI_MWA_NO_ALT_ENTER       0x2
 #define DXGI_MWA_NO_PRINT_SCREEN    0x4
 #define DXGI_MWA_VALID              0x7
 
-const GUID IDXGIFactory_GUID = {0x7b7166ec,0x21c7,0x44ae,{0xb2,0x1a,0xc9,0xae,0x32,0x1a,0xe3,0x69}};
 struct IDXGIFactory : public IDXGIObject
 {
+    static const GUID guid;
+
     virtual HRESULT EnumAdapters(
         /*in*/ UINT adapter_idx,
         /*out*/ IDXGIAdapter **adapter
@@ -339,13 +358,15 @@ struct IDXGIFactory : public IDXGIObject
         /*out*/ IDXGIAdapter **adapter
     );
 };
+const GUID IDXGIFactory::guid = {0x7b7166ec,0x21c7,0x44ae,{0xb2,0x1a,0xc9,0xae,0x32,0x1a,0xe3,0x69}};
 
 HRESULT CreateDXGIFactory(REFIID riid, void **factory);
 HRESULT CreateDXGIFactory1(REFIID riid, void **factory);
 
-const GUID IDXGIDevice_GUID = {0x54ec77fa,0x1377,0x44e6,{0x8c,0x32,0x88,0xfd,0x5f,0x44,0xc8,0x4c}};
 struct IDXGIDevice : public IDXGIObject
 {
+    static const GUID guid;
+
     virtual HRESULT GetAdapter(
         /*out*/ IDXGIAdapter **adapter
     );
@@ -368,6 +389,7 @@ struct IDXGIDevice : public IDXGIObject
         /*out*/ INT *priority
     );
 };
+const GUID IDXGIDevice::guid = {0x54ec77fa,0x1377,0x44e6,{0x8c,0x32,0x88,0xfd,0x5f,0x44,0xc8,0x4c}};
 
 typedef enum DXGI_ADAPTER_FLAG {
     DXGI_ADAPTER_FLAG_NONE         = 0,
@@ -388,24 +410,30 @@ typedef struct DXGI_ADAPTER_DESC1 {
     UINT   Flags;
 } DXGI_ADAPTER_DESC1;
 
-const GUID IDXGIAdapter1_GUID = {0x29038f61,0x3839,0x4626,{0x91,0xfd,0x08,0x68,0x79,0x01,0x1a,0x05}};
 struct IDXGIAdapter1 : public IDXGIAdapter
 {
+    static const GUID guid;
+
     virtual HRESULT GetDesc1(/*out*/ DXGI_ADAPTER_DESC1 *pDesc);
 };
+const GUID IDXGIAdapter1::guid = {0x29038f61,0x3839,0x4626,{0x91,0xfd,0x08,0x68,0x79,0x01,0x1a,0x05}};
 
-const GUID IDXGIDevice1_GUID = {0x77db970f,0x6276,0x48ba,{0xba,0x28,0x07,0x01,0x43,0xb4,0x39,0x2c}};
 struct IDXGIDevice1 : public IDXGIDevice
 {
+    static const GUID guid;
+
     virtual HRESULT SetMaximumFrameLatency(/*in*/ UINT MaxLatency);
     virtual HRESULT GetMaximumFrameLatency(/*out*/ UINT *pMaxLatency);
 };
+const GUID IDXGIDevice1::guid = {0x77db970f,0x6276,0x48ba,{0xba,0x28,0x07,0x01,0x43,0xb4,0x39,0x2c}};
 
-const GUID IDXGIFactory1_GUID = {0x770aae78,0xf26f,0x4dba,{0xa8,0x29,0x25,0x3c,0x83,0xd1,0xb3,0x87}};
 struct IDXGIFactory1 : public IDXGIFactory
 {
+    static const GUID guid;
+
     virtual HRESULT EnumAdapters1(/*in*/ UINT Adapter, /*out*/ IDXGIAdapter1 **ppAdapter);
     virtual BOOL IsCurrent();
 };
+const GUID IDXGIFactory1::guid = {0x770aae78,0xf26f,0x4dba,{0xa8,0x29,0x25,0x3c,0x83,0xd1,0xb3,0x87}};
 
 #endif

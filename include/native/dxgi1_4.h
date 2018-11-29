@@ -28,9 +28,10 @@ typedef struct DXGI_QUERY_VIDEO_MEMORY_INFO
     UINT64 CurrentReservation;
 } DXGI_QUERY_VIDEO_MEMORY_INFO;
 
-const GUID IDXGISwapChain3_GUID = {0x94d99bdb,0xf1f8,0x4ab0,{0xb2,0x36,0x7d,0xa0,0x17,0x0e,0xda,0xb1}} ;
 struct IDXGISwapChain3 : public IDXGISwapChain2
 {
+    static const GUID guid;
+
     virtual UINT GetCurrentBackBufferIndex();
     virtual HRESULT CheckColorSpaceSupport(
         /*in*/ DXGI_COLOR_SPACE_TYPE colour_space,
@@ -49,10 +50,12 @@ struct IDXGISwapChain3 : public IDXGISwapChain2
         /*in*/ IUnknown *const *present_queue
     );
 };
+const GUID IDXGISwapChain3::guid = {0x94d99bdb,0xf1f8,0x4ab0,{0xb2,0x36,0x7d,0xa0,0x17,0x0e,0xda,0xb1}} ;
 
-const GUID IDXGIOutput4_GUID = {0xdc7dca35,0x2196,0x414d,{0x9F,0x53,0x61,0x78,0x84,0x03,0x2a,0x60}};
 struct IDXGIOutput4 : public IDXGIOutput3
 {
+    static const GUID guid;
+
     virtual HRESULT CheckOverlayColorSpaceSupport(
         /*in*/ DXGI_FORMAT format,
         /*in*/ DXGI_COLOR_SPACE_TYPE colour_space,
@@ -60,10 +63,12 @@ struct IDXGIOutput4 : public IDXGIOutput3
         /*out*/ UINT *flags
     );
 };
+const GUID IDXGIOutput4::guid = {0xdc7dca35,0x2196,0x414d,{0x9F,0x53,0x61,0x78,0x84,0x03,0x2a,0x60}};
 
-const GUID IDXGIFactory4_GUID = {0x1bc6ea02,0xef36,0x464f,{0xbf,0x0c,0x21,0xca,0x39,0xe5,0x16,0x8a}};
 struct IDXGIFactory4 : public IDXGIFactory3
 {
+    static const GUID guid;
+
     virtual HRESULT EnumAdapterByLuid(
         /*in*/ LUID luid,
         /*in*/ REFIID iid,
@@ -74,10 +79,12 @@ struct IDXGIFactory4 : public IDXGIFactory3
         /*out*/ void **adapter
     );
 };
+const GUID IDXGIFactory4::guid = {0x1bc6ea02,0xef36,0x464f,{0xbf,0x0c,0x21,0xca,0x39,0xe5,0x16,0x8a}};
 
-const GUID IDXGIAdapter3_GUID = {0x645967a4,0x1392,0x4310,{0xa7,0x98,0x80,0x53,0xce,0x3e,0x93,0xfd}};
 struct IDXGIAdapter3 : public IDXGIAdapter2
 {
+    static const GUID guid;
+
     virtual HRESULT RegisterHardwareContentProtectionTeardownStatusEvent(
         /*in*/ HANDLE event,
         /*out*/ DWORD *cookie
@@ -103,6 +110,7 @@ struct IDXGIAdapter3 : public IDXGIAdapter2
         /*in*/ DWORD cookie
     );
 };
+const GUID IDXGIAdapter3::guid = {0x645967a4,0x1392,0x4310,{0xa7,0x98,0x80,0x53,0xce,0x3e,0x93,0xfd}};
 
 
 

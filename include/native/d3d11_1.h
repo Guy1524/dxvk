@@ -184,20 +184,24 @@ typedef struct D3D11_VIDEO_SAMPLE_DESC
     DXGI_COLOR_SPACE_TYPE ColorSpace;
 } D3D11_VIDEO_SAMPLE_DESC;
 
-const GUID ID3D11BlendState1_GUID = {0xcc86fabe,0xda55,0x401d,{0x85,0xe7,0xe3,0xc9,0xde,0x28,0x77,0xe9}};
 struct ID3D11BlendState1 : public ID3D11BlendState
 {
+    static const GUID guid;
+
     virtual void GetDesc1(D3D11_BLEND_DESC1 *pDesc);
 };
+const GUID ID3D11BlendState1::guid = {0xcc86fabe,0xda55,0x401d,{0x85,0xe7,0xe3,0xc9,0xde,0x28,0x77,0xe9}};
 
-const GUID ID3DDeviceContextState_GUID = {0x5c1e0d8a,0x7c23,0x48f9,{0x8c,0x59,0xa9,0x29,0x58,0xce,0xff,0x11}};
 struct ID3DDeviceContextState : public ID3D11DeviceChild
 {
+    static const GUID guid;
 };
+const GUID ID3DDeviceContextState::guid = {0x5c1e0d8a,0x7c23,0x48f9,{0x8c,0x59,0xa9,0x29,0x58,0xce,0xff,0x11}};
 
-const GUID ID3D11DeviceContext1_GUID = {0xbb2c6faa,0xb5fb,0x4082,{0x8e,0x6b,0x38,0x8b,0x8c,0xfa,0x90,0xe1}};
 struct ID3D11DeviceContext1 : public ID3D11DeviceContext
 {
+    static const GUID guid;
+
     virtual void CopySubresourceRegion1(
             ID3D11Resource *pDstResource,
             UINT DstSubresource,
@@ -321,10 +325,12 @@ struct ID3D11DeviceContext1 : public ID3D11DeviceContext
             const D3D11_RECT *pRects,
             UINT NumRects);
 };
+const GUID ID3D11DeviceContext1::guid = {0xbb2c6faa,0xb5fb,0x4082,{0x8e,0x6b,0x38,0x8b,0x8c,0xfa,0x90,0xe1}};
 
-const GUID ID3D11VideoContext1_GUID = {0xa7f026da,0xa5f8,0x4487,{0xa5,0x64,0x15,0xe3,0x43,0x57,0x65,0x1e}};
 struct ID3D11VideoContext1 : public ID3D11VideoContext
 {
+    static const GUID guid;
+
     virtual HRESULT SubmitDecoderBuffers1(
         ID3D11VideoDecoder *decoder,
         UINT buffer_count,
@@ -400,10 +406,12 @@ struct ID3D11VideoContext1 : public ID3D11VideoContext
         UINT *behaviour_hints
     );
 };
+const GUID ID3D11VideoContext1::guid = {0xa7f026da,0xa5f8,0x4487,{0xa5,0x64,0x15,0xe3,0x43,0x57,0x65,0x1e}};
 
-const GUID ID3D11VideoDevice1_GUID = {0x29da1d51,0x1321,0x4454,{0x80,0x4b,0xf5,0xfc,0x9f,0x86,0x1f,0x0f}};
 struct ID3D11VideoDevice1 : public ID3D11VideoDevice
 {
+    static const GUID guid;
+
     virtual HRESULT GetCryptoSessionPrivateDataSize(
         const GUID *crypto_type,
         const GUID *decoder_profile,
@@ -437,10 +445,12 @@ struct ID3D11VideoDevice1 : public ID3D11VideoDevice
         D3D11_VIDEO_SAMPLE_DESC *recommended_output_desc
     );
 };
+const GUID ID3D11VideoDevice1::guid = {0x29da1d51,0x1321,0x4454,{0x80,0x4b,0xf5,0xfc,0x9f,0x86,0x1f,0x0f}};
 
-const GUID ID3D11VideoProcessorEnumerator1_GUID = {0x465217f2,0x5568,0x43cf,{0xb5,0xb9,0xf6,0x1d,0x54,0x53,0x1c,0xa1}};
 struct ID3D11VideoProcessorEnumerator1 : public ID3D11VideoProcessorEnumerator
 {
+    static const GUID guid;
+
     virtual HRESULT CheckVideoProcessorFormatConversion(
         DXGI_FORMAT input_format,
         DXGI_COLOR_SPACE_TYPE input_colour_space,
@@ -449,25 +459,31 @@ struct ID3D11VideoProcessorEnumerator1 : public ID3D11VideoProcessorEnumerator
         BOOL *supported
     );
 };
+const GUID ID3D11VideoProcessorEnumerator1::guid = {0x465217f2,0x5568,0x43cf,{0xb5,0xb9,0xf6,0x1d,0x54,0x53,0x1c,0xa1}};
 
-const GUID ID3DUserDefinedAnnotation_GUID = {0xb2daad8b,0x03d4,0x4dbf,{0x95,0xeb,0x32,0xab,0x4b,0x63,0xd0,0xab}};
 struct ID3DUserDefinedAnnotation : public IUnknown
 {
+    static const GUID guid;
+
     virtual INT BeginEvent(LPCWSTR Name);
     virtual INT EndEvent();
     virtual void SetMarker(LPCWSTR Name);
     virtual BOOL GetStatus();
 };
+const GUID ID3DUserDefinedAnnotation::guid = {0xb2daad8b,0x03d4,0x4dbf,{0x95,0xeb,0x32,0xab,0x4b,0x63,0xd0,0xab}};
 
-const GUID ID3D11RasterizerState1_GUID = {0x1217d7a6,0x5039,0x418c,{0xb0,0x42,0x9c,0xbe,0x25,0x6a,0xfd,0x6e}};
 struct ID3D11RasterizerState1 : public ID3D11RasterizerState
 {
+    static const GUID guid;
+
     virtual void GetDesc1(D3D11_RASTERIZER_DESC1 *pDesc);
 };
+const GUID ID3D11RasterizerState1::guid = {0x1217d7a6,0x5039,0x418c,{0xb0,0x42,0x9c,0xbe,0x25,0x6a,0xfd,0x6e}};
 
-const GUID ID3D11Device1_GUID = {0xa04bfb29,0x08ef,0x43d6,{0xa4,0x9c,0xa9,0xbd,0xbd,0xcb,0xe6,0x86}};
 struct ID3D11Device1 : public ID3D11Device
 {
+    static const GUID guid;
+
     virtual void GetImmediateContext1(
             ID3D11DeviceContext1 **ppImmediateContext);
 
@@ -503,5 +519,6 @@ struct ID3D11Device1 : public ID3D11Device
             REFIID returnedInterface,
             void **ppResource);
 };
+const GUID ID3D11Device1::guid = {0xa04bfb29,0x08ef,0x43d6,{0xa4,0x9c,0xa9,0xbd,0xbd,0xcb,0xe6,0x86}};
 
 #endif

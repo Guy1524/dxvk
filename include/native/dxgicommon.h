@@ -20,6 +20,7 @@
  */
 
 #include <windows.h>
+#include <unknwn.h>
 
 const UINT DXGI_STANDARD_MULTISAMPLE_QUALITY_PATTERN = 0xffffffff;
 const UINT DXGI_CENTER_MULTISAMPLE_QUALITY_PATTERN = 0xfffffffe;
