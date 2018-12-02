@@ -83,103 +83,98 @@ typedef struct DXGI_MODE_DESC1
 
 struct IDXGIOutputDuplication : public IDXGIObject
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0x191cfac3,0xa341,0x470d,{0xb2,0x6e,0xa8,0x64,0xf4,0x28,0x31,0x9c}};
 
     virtual void GetDesc(
         /*out*/ DXGI_OUTDUPL_DESC *desc
-    );
+    ) = 0;
 
     virtual HRESULT AcquireNextFrame(
         /*in*/ UINT timeout_in_milliseconds,
         /*out*/ DXGI_OUTDUPL_FRAME_INFO *frame_info,
         /*out*/ IDXGIResource **desktop_resource
-    );
+    ) = 0;
 
     virtual HRESULT GetFrameDirtyRects(
         /*in*/ UINT dirty_rects_buffer_size,
         /*out*/ RECT *dirty_rects_buffer,
         /*out*/ UINT *dirty_rects_buffer_size_required
-    );
+    ) = 0;
 
     virtual HRESULT GetFrameMoveRects(
         /*in*/ UINT move_rects_buffer_size,
         /*out*/ DXGI_OUTDUPL_MOVE_RECT *move_rect_buffer,
         /*out*/ UINT *move_rects_buffer_size_required
-    );
+    ) = 0;
 
     virtual HRESULT GetFramePointerShape(
         /*in*/ UINT pointer_shape_buffer_size,
         /*out*/ void *pointer_shape_buffer,
         /*out*/ UINT *pointer_shape_buffer_size_required,
         /*out*/ DXGI_OUTDUPL_POINTER_SHAPE_INFO *pointer_shape_info
-    );
+    ) = 0;
 
     virtual HRESULT MapDesktopSurface(
         /*out*/ DXGI_MAPPED_RECT *locked_rect
-    );
+    ) = 0;
 
-    virtual HRESULT UnMapDesktopSurface();
+    virtual HRESULT UnMapDesktopSurface() = 0;
 
-    virtual HRESULT ReleaseFrame();
+    virtual HRESULT ReleaseFrame() = 0;
 };
-const GUID IDXGIOutputDuplication::guid = {0x191cfac3,0xa341,0x470d,{0xb2,0x6e,0xa8,0x64,0xf4,0x28,0x31,0x9c}};
 
 struct IDXGISurface2 : public IDXGISurface1
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0xaba496dd,0xb617,0x4cb8,{0xa8,0x66,0xbc,0x44,0xd7,0xeb,0x1f,0xa2}};
 
     virtual HRESULT GetResource(
         /*in*/ REFIID iid,
         /*out*/ void **parent_resource,
         /*out*/ UINT *subresource_idx
-    );
+    ) = 0;
 };
-const GUID IDXGISurface2::guid = {0xaba496dd,0xb617,0x4cb8,{0xa8,0x66,0xbc,0x44,0xd7,0xeb,0x1f,0xa2}};
 
 struct IDXGIResource1 : public IDXGIResource
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0x30961379,0x4609,0x4a41,{0x99,0x8e,0x54,0xfe,0x56,0x7e,0xe0,0xc1}};
 
     virtual HRESULT CreateSubresourceSurface(
         UINT index,
         /*out*/ IDXGISurface2 **surface
-    );
+    ) = 0;
     virtual HRESULT CreateSharedHandle(
         /*in*/ const SECURITY_ATTRIBUTES *attributes,
         /*in*/ DWORD access,
         /*in*/ const WCHAR *name,
         /*out*/ HANDLE *handle
-    );
+    ) = 0;
 };
-const GUID IDXGIResource1::guid = {0x30961379,0x4609,0x4a41,{0x99,0x8e,0x54,0xfe,0x56,0x7e,0xe0,0xc1}};
 
 struct IDXGIDisplayControl : public IUnknown
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0xea9dbf1a,0xc88e,0x4486,{0x85,0x4a,0x98,0xaa,0x01,0x38,0xf3,0x0c}};
 
-    virtual BOOL IsStereoEnabled();
-    virtual void SetStereoEnabled(BOOL enabled);
+    virtual BOOL IsStereoEnabled() = 0;
+    virtual void SetStereoEnabled(BOOL enabled) = 0;
 };
-const GUID IDXGIDisplayControl::guid = {0xea9dbf1a,0xc88e,0x4486,{0x85,0x4a,0x98,0xaa,0x01,0x38,0xf3,0x0c}};
 
 struct IDXGIDevice2 : public IDXGIDevice1
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0x05008617,0xfbfd,0x4051,{0xa7,0x90,0x14,0x48,0x84,0xb4,0xf6,0xa9}};
 
     virtual HRESULT OfferResources(
             /*in*/ UINT NumResources,
             /*in*/ IDXGIResource *const *ppResources,
-            /*in*/ DXGI_OFFER_RESOURCE_PRIORITY Priority);
+            /*in*/ DXGI_OFFER_RESOURCE_PRIORITY Priority) = 0;
 
     virtual HRESULT ReclaimResources(
             /*in*/ UINT NumResources,
             /*in*/ IDXGIResource *const *ppResources,
-            /*in*/ BOOL *pDiscarded);
+            /*in*/ BOOL *pDiscarded) = 0;
 
     virtual HRESULT EnqueueSetEvent(
-            /*in*/ HANDLE hEvent);
+            /*in*/ HANDLE hEvent) = 0;
 };
-const GUID IDXGIDevice2::guid = {0x05008617,0xfbfd,0x4051,{0xa7,0x90,0x14,0x48,0x84,0xb4,0xf6,0xa9}};
 
 typedef enum DXGI_SCALING {
     DXGI_SCALING_STRETCH = 0,
@@ -217,50 +212,49 @@ typedef struct DXGI_PRESENT_PARAMETERS {
 
 struct IDXGISwapChain1 : public IDXGISwapChain
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0x790a45f7,0x0d42,0x4876,{0x98,0x3a,0x0a,0x55,0xcf,0xe6,0xf4,0xaa}};
 
     virtual HRESULT GetDesc1(
-            /*out*/ DXGI_SWAP_CHAIN_DESC1 *pDesc);
+            /*out*/ DXGI_SWAP_CHAIN_DESC1 *pDesc) = 0;
 
     virtual HRESULT GetFullscreenDesc(
-            /*out*/ DXGI_SWAP_CHAIN_FULLSCREEN_DESC *pDesc);
+            /*out*/ DXGI_SWAP_CHAIN_FULLSCREEN_DESC *pDesc) = 0;
 
     virtual HRESULT GetHwnd(
-            /*out*/ HWND *pHwnd);
+            /*out*/ HWND *pHwnd) = 0;
 
     virtual HRESULT GetCoreWindow(
             /*in*/ REFIID refiid,
-            /*out*/ void **ppUnk);
+            /*out*/ void **ppUnk) = 0;
 
     virtual HRESULT Present1(
             /*in*/ UINT SyncInterval,
             /*in*/ UINT PresentFlags,
-            /*in*/ const DXGI_PRESENT_PARAMETERS *pPresentParameters);
+            /*in*/ const DXGI_PRESENT_PARAMETERS *pPresentParameters) = 0;
 
-    virtual BOOL IsTemporaryMonoSupported();
+    virtual BOOL IsTemporaryMonoSupported() = 0;
 
     virtual HRESULT GetRestrictToOutput(
-            /*out*/ IDXGIOutput **ppRestrictToOutput);
+            /*out*/ IDXGIOutput **ppRestrictToOutput) = 0;
 
     virtual HRESULT SetBackgroundColor(
-            /*in*/ const DXGI_RGBA *pColor);
+            /*in*/ const DXGI_RGBA *pColor) = 0;
 
     virtual HRESULT GetBackgroundColor(
-            /*out*/ DXGI_RGBA *pColor);
+            /*out*/ DXGI_RGBA *pColor) = 0;
 
     virtual HRESULT SetRotation(
-            /*in*/ DXGI_MODE_ROTATION Rotation);
+            /*in*/ DXGI_MODE_ROTATION Rotation) = 0;
 
     virtual HRESULT GetRotation(
-            /*out*/ DXGI_MODE_ROTATION *pRotation);
+            /*out*/ DXGI_MODE_ROTATION *pRotation) = 0;
 };
-const GUID IDXGISwapChain1::guid = {0x790a45f7,0x0d42,0x4876,{0x98,0x3a,0x0a,0x55,0xcf,0xe6,0xf4,0xaa}};
 
 struct IDXGIFactory2 : public IDXGIFactory1
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0x50c83a1c,0xe072,0x4c48,{0x87,0xb0,0x36,0x30,0xfa,0x36,0xa6,0xd0}};
 
-    virtual BOOL IsWindowedStereoEnabled();
+    virtual BOOL IsWindowedStereoEnabled() = 0;
 
     virtual HRESULT CreateSwapChainForHwnd(
             /*in*/  IUnknown *pDevice,
@@ -268,50 +262,49 @@ struct IDXGIFactory2 : public IDXGIFactory1
             /*in*/  const DXGI_SWAP_CHAIN_DESC1 *pDesc,
             /*in*/  const DXGI_SWAP_CHAIN_FULLSCREEN_DESC *pFullscreenDesc,
             /*in*/  IDXGIOutput *pRestrictToOutput,
-            /*out*/ IDXGISwapChain1 **ppSwapChain);
+            /*out*/ IDXGISwapChain1 **ppSwapChain) = 0;
 
     virtual HRESULT CreateSwapChainForCoreWindow(
             /*in*/  IUnknown *pDevice,
             /*in*/  IUnknown *pWindow,
             /*in*/  const DXGI_SWAP_CHAIN_DESC1 *pDesc,
             /*in*/  IDXGIOutput *pRestrictToOutput,
-            /*out*/ IDXGISwapChain1 **ppSwapChain);
+            /*out*/ IDXGISwapChain1 **ppSwapChain) = 0;
 
     virtual HRESULT GetSharedResourceAdapterLuid(
             /*in*/  HANDLE hResource,
-            /*out*/ LUID *pLuid);
+            /*out*/ LUID *pLuid) = 0;
 
     virtual HRESULT RegisterOcclusionStatusWindow(
             /*in*/  HWND WindowHandle,
             /*in*/  UINT wMsg,
-            /*out*/ DWORD *pdwCookie);
+            /*out*/ DWORD *pdwCookie) = 0;
 
     virtual HRESULT RegisterStereoStatusEvent(
             /*in*/  HANDLE hEvent,
-            /*out*/ DWORD *pdwCookie);
+            /*out*/ DWORD *pdwCookie) = 0;
 
     virtual void UnregisterStereoStatus(
-            /*in*/  DWORD dwCookie);
+            /*in*/  DWORD dwCookie) = 0;
 
     virtual HRESULT RegisterStereoStatusWindow(
             /*in*/  HWND WindowHandle,
             /*in*/  UINT wMsg,
-            /*out*/ DWORD *pdwCookie);
+            /*out*/ DWORD *pdwCookie) = 0;
 
     virtual HRESULT RegisterOcclusionStatusEvent(
             /*in*/  HANDLE hEvent,
-            /*out*/ DWORD *pdwCookie);
+            /*out*/ DWORD *pdwCookie) = 0;
 
     virtual void UnregisterOcclusionStatus(
-            /*in*/  DWORD dwCookie);
+            /*in*/  DWORD dwCookie) = 0;
 
     virtual HRESULT CreateSwapChainForComposition(
             /*in*/  IUnknown *pDevice,
             /*in*/  const DXGI_SWAP_CHAIN_DESC1 *pDesc,
             /*in*/  IDXGIOutput *pRestrictToOutput,
-            /*out*/ IDXGISwapChain1 **ppSwapChain);
+            /*out*/ IDXGISwapChain1 **ppSwapChain) = 0;
 };
-const GUID IDXGIFactory2::guid = {0x50c83a1c,0xe072,0x4c48,{0x87,0xb0,0x36,0x30,0xfa,0x36,0xa6,0xd0}};
 
 typedef enum DXGI_GRAPHICS_PREEMPTION_GRANULARITY {
     DXGI_GRAPHICS_PREEMPTION_DMA_BUFFER_BOUNDARY,
@@ -330,7 +323,10 @@ typedef enum DXGI_COMPUTE_PREEMPTION_GRANULARITY {
 } DXGI_COMPUTE_PREEMPTION_GRANULARITY;
 
 typedef struct DXGI_ADAPTER_DESC2 {
-    WCHAR Description[128];
+    //Native Version
+        //WCHAR Description[128];
+    //Custom Version
+        char Description[128];
     UINT VendorId;
     UINT DeviceId;
     UINT SubSysId;
@@ -346,38 +342,36 @@ typedef struct DXGI_ADAPTER_DESC2 {
 
 struct IDXGIAdapter2 : public IDXGIAdapter1
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0x0aa1ae0a,0xfa0e,0x4b84,{0x86,0x44,0xe0,0x5f,0xf8,0xe5,0xac,0xb5}};
 
-    virtual HRESULT GetDesc2(/*out*/ DXGI_ADAPTER_DESC2 *pDesc);
+    virtual HRESULT GetDesc2(/*out*/ DXGI_ADAPTER_DESC2 *pDesc) = 0;
 };
-const GUID IDXGIAdapter2::guid = {0x0aa1ae0a,0xfa0e,0x4b84,{0x86,0x44,0xe0,0x5f,0xf8,0xe5,0xac,0xb5}};
 
 struct IDXGIOutput1 : public IDXGIOutput
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0x00cddea8,0x939b,0x4b83,{0xa3,0x40,0xa6,0x85,0x22,0x66,0x66,0xcc}};
 
     virtual HRESULT GetDisplayModeList1(
         /*in*/ DXGI_FORMAT enum_format,
         /*in*/ UINT flags,
         /*inout*/ UINT *num_modes,
         /*out*/ DXGI_MODE_DESC1 *desc
-    );
+    ) = 0;
 
     virtual HRESULT FindClosestMatchingMode1(
         /*in*/ const DXGI_MODE_DESC1 *mode_to_match,
         /*out*/ DXGI_MODE_DESC1 *closest_match,
         /*in*/ IUnknown *concerned_device
-    );
+    ) = 0;
 
     virtual HRESULT GetDisplaySurfaceData1(
         /*in*/ IDXGIResource *destination
-    );
+    ) = 0;
 
     virtual HRESULT DuplicateOutput(
         /*in*/ IUnknown *device,
         /*out*/ IDXGIOutputDuplication **output_duplication
-    );
+    ) = 0;
 };
-const GUID IDXGIOutput1::guid = {0x00cddea8,0x939b,0x4b83,{0xa3,0x40,0xa6,0x85,0x22,0x66,0x66,0xcc}};
 
 #endif

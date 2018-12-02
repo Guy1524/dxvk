@@ -62,4 +62,14 @@ typedef struct DXGI_RATIONAL
     UINT Denominator;
 } DXGI_RATIONAL;
 
+//custom
+struct GLFW_WINDOW_DESC
+{
+    int width;
+    int height;
+    const char *title;
+    bool fullscreen;
+    int resizable;
+};
+
 #endif

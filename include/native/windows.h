@@ -3,6 +3,9 @@
 
 #include <inttypes.h>
 
+#define GLFW_INCLUDE_VULKAN
+#include <GLFW/glfw3.h>
+
 // barebones windows.h for compatibility
 
 // basic integer definitions
@@ -10,7 +13,7 @@ typedef unsigned char  BYTE;
 typedef unsigned short WORD;
 typedef unsigned int   DWORD;
 typedef unsigned long  ULONG;
-typedef long           LONG;
+typedef int32_t        LONG;
 typedef unsigned int   UINT;
 typedef int            INT;
 typedef int            BOOL;
@@ -33,8 +36,6 @@ typedef void  *PVOID;
 typedef void  *LPVOID;
 typedef PVOID  HANDLE;
 typedef HANDLE HMODULE;
-typedef HANDLE HMONITOR;
-typedef HANDLE HWND;
 typedef HANDLE HDC;
 typedef HANDLE HINSTANCE;
 
@@ -64,14 +65,23 @@ typedef char *LPSTR;
 // errors
 typedef LONG HRESULT;
 
-#define S_OK          0
+#define S_OK                    0
 #define S_FALSE       (HRESULT) 1
-#define E_NOINTERFACE 0x80004002
+#define E_NOTIMPL     (HRESULT) 0x80004001
+#define E_NOINTERFACE (HRESULT) 0x80004002
+#define E_FAIL        (HRESULT) 0x80004005
 #define E_INVALIDARG  (HRESULT) 0x80070057
 
+#define DXGI_ERROR_INVALID_CALL            (HRESULT) 0x887a0001
+#define DXGI_ERROR_NOT_FOUND               (HRESULT) 0x887a0002
+#define DXGI_ERROR_MORE_DATA               (HRESULT) 0x887a0003
+#define DXGI_ERROR_UNSUPPORTED             (HRESULT) 0x887a0004
+#define DXGI_ERROR_WAS_STILL_DRAWING       (HRESULT) 0x887a000a
+#define DXGI_ERROR_DRIVER_INTERNAL_ERROR   (HRESULT) 0x887a0020
+#define DXGI_ERROR_NOT_CURRENTLY_AVAILABLE (HRESULT) 0x887a0022
 
-#define DXGI_ERROR_NOT_FOUND (HRESULT) 0x887a0002
-#define DXGI_ERROR_MORE_DATA (HRESULT) 0x887a0003
+#define SUCCEEDED(stat) ((HRESULT)(stat)>=0)
+#define FAILED(stat) ((HRESULT)(stat)<0)
 
 // COM
 #define __uuidof(iface)  iface::guid
@@ -104,6 +114,19 @@ struct GUID{
 typedef const GUID& REFIID;
 #define REFGUID const GUID &
 
+/*#define __CRT_UUID_DECL(type,l,w1,w2,b1,b2,b3,b4,b5,b6,b7,b8)           \
+    extern "C++" {                                                      \
+    template<> inline const GUID &__wine_uuidof<type>() {               \
+        static const IID __uuid_inst = {l,w1,w2, {b1,b2,b3,b4,b5,b6,b7,b8}}; \
+        return __uuid_inst;                                             \
+    }                                                                   \
+    template<> inline const GUID &__wine_uuidof<type*>() {              \
+        return __wine_uuidof<type>();                                   \
+    }                                                                   \
+    }
+
+#define __uuidof(type) __wine_uuidof<typeof(type)>()*/
+
 // misc.
 typedef wchar_t WCHAR;
 typedef const WCHAR *LPCWSTR;
@@ -122,7 +145,19 @@ typedef struct _LUID {
 #define TRUE  1
 #define FALSE 0
 
+#define ENUM_CURRENT_SETTINGS  ((DWORD) -1)
+
 // custom
 #define STDMETHODCALLTYPE
+
+#define HWND GLFWwindow*
+#define HMONITOR GLFWmonitor*
+
+#define __stdcall
+
+inline bool IsWindow(GLFWwindow* window)
+{
+  return window != nullptr;
+}
 
 #endif

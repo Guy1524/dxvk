@@ -186,21 +186,19 @@ typedef struct D3D11_VIDEO_SAMPLE_DESC
 
 struct ID3D11BlendState1 : public ID3D11BlendState
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0xcc86fabe,0xda55,0x401d,{0x85,0xe7,0xe3,0xc9,0xde,0x28,0x77,0xe9}};
 
-    virtual void GetDesc1(D3D11_BLEND_DESC1 *pDesc);
+    virtual void GetDesc1(D3D11_BLEND_DESC1 *pDesc) = 0;
 };
-const GUID ID3D11BlendState1::guid = {0xcc86fabe,0xda55,0x401d,{0x85,0xe7,0xe3,0xc9,0xde,0x28,0x77,0xe9}};
 
 struct ID3DDeviceContextState : public ID3D11DeviceChild
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0x5c1e0d8a,0x7c23,0x48f9,{0x8c,0x59,0xa9,0x29,0x58,0xce,0xff,0x11}};
 };
-const GUID ID3DDeviceContextState::guid = {0x5c1e0d8a,0x7c23,0x48f9,{0x8c,0x59,0xa9,0x29,0x58,0xce,0xff,0x11}};
 
 struct ID3D11DeviceContext1 : public ID3D11DeviceContext
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0xbb2c6faa,0xb5fb,0x4082,{0x8e,0x6b,0x38,0x8b,0x8c,0xfa,0x90,0xe1}};
 
     virtual void CopySubresourceRegion1(
             ID3D11Resource *pDstResource,
@@ -211,7 +209,7 @@ struct ID3D11DeviceContext1 : public ID3D11DeviceContext
             ID3D11Resource *pSrcResource,
             UINT SrcSubresource,
             const D3D11_BOX *pSrcBox,
-            UINT CopyFlags);
+            UINT CopyFlags) = 0;
 
     virtual void UpdateSubresource1(
             ID3D11Resource *pDstResource,
@@ -220,182 +218,181 @@ struct ID3D11DeviceContext1 : public ID3D11DeviceContext
             const void *pSrcData,
             UINT SrcRowPitch,
             UINT SrcDepthPitch,
-            UINT CopyFlags);
+            UINT CopyFlags) = 0;
 
-    virtual void DiscardResource(ID3D11Resource *pResource);
+    virtual void DiscardResource(ID3D11Resource *pResource) = 0;
 
-    virtual void DiscardView(ID3D11View *pResourceView);
+    virtual void DiscardView(ID3D11View *pResourceView) = 0;
 
     virtual void VSSetConstantBuffers1(
             UINT StartSlot,
             UINT NumBuffers,
             ID3D11Buffer *const *ppConstantBuffers,
             const UINT *pFirstConstant,
-            const UINT *pNumConstants);
+            const UINT *pNumConstants) = 0;
 
     virtual void HSSetConstantBuffers1(
             UINT StartSlot,
             UINT NumBuffers,
             ID3D11Buffer *const *ppConstantBuffers,
             const UINT *pFirstConstant,
-            const UINT *pNumConstants);
+            const UINT *pNumConstants) = 0;
 
     virtual void DSSetConstantBuffers1(
             UINT StartSlot,
             UINT NumBuffers,
             ID3D11Buffer *const *ppConstantBuffers,
             const UINT *pFirstConstant,
-            const UINT *pNumConstants);
+            const UINT *pNumConstants) = 0;
 
     virtual void GSSetConstantBuffers1(
             UINT StartSlot,
             UINT NumBuffers,
             ID3D11Buffer *const *ppConstantBuffers,
             const UINT *pFirstConstant,
-            const UINT *pNumConstants);
+            const UINT *pNumConstants) = 0;
 
     virtual void PSSetConstantBuffers1(
             UINT StartSlot,
             UINT NumBuffers,
             ID3D11Buffer *const *ppConstantBuffers,
             const UINT *pFirstConstant,
-            const UINT *pNumConstants);
+            const UINT *pNumConstants) = 0;
 
     virtual void CSSetConstantBuffers1(
             UINT StartSlot,
             UINT NumBuffers,
             ID3D11Buffer *const *ppConstantBuffers,
             const UINT *pFirstConstant,
-            const UINT *pNumConstants);
+            const UINT *pNumConstants) = 0;
 
     virtual void VSGetConstantBuffers1(
             UINT StartSlot,
             UINT NumBuffers,
             ID3D11Buffer **ppConstantBuffers,
             UINT *pFirstConstant,
-            UINT *pNumConstants);
+            UINT *pNumConstants) = 0;
 
     virtual void HSGetConstantBuffers1(
             UINT StartSlot,
             UINT NumBuffers,
             ID3D11Buffer **ppConstantBuffers,
             UINT *pFirstConstant,
-            UINT *pNumConstants);
+            UINT *pNumConstants) = 0;
 
     virtual void DSGetConstantBuffers1(
             UINT StartSlot,
             UINT NumBuffers,
             ID3D11Buffer **ppConstantBuffers,
             UINT *pFirstConstant,
-            UINT *pNumConstants);
+            UINT *pNumConstants) = 0;
 
     virtual void GSGetConstantBuffers1(
             UINT StartSlot,
             UINT NumBuffers,
             ID3D11Buffer **ppConstantBuffers,
             UINT *pFirstConstant,
-            UINT *pNumConstants);
+            UINT *pNumConstants) = 0;
 
     virtual void PSGetConstantBuffers1(
             UINT StartSlot,
             UINT NumBuffers,
             ID3D11Buffer **ppConstantBuffers,
             UINT *pFirstConstant,
-            UINT *pNumConstants);
+            UINT *pNumConstants) = 0;
 
     virtual void CSGetConstantBuffers1(
             UINT StartSlot,
             UINT NumBuffers,
             ID3D11Buffer **ppConstantBuffers,
             UINT *pFirstConstant,
-            UINT *pNumConstants);
+            UINT *pNumConstants) = 0;
 
     virtual void SwapDeviceContextState(
             ID3DDeviceContextState *pState,
-            ID3DDeviceContextState **ppPreviousState);
+            ID3DDeviceContextState **ppPreviousState) = 0;
 
     virtual void ClearView(
             ID3D11View *pView,
             const FLOAT Color[4],
             const D3D11_RECT *pRect,
-            UINT NumRects);
+            UINT NumRects) = 0;
 
     virtual void DiscardView1(
             ID3D11View *pResourceView,
             const D3D11_RECT *pRects,
-            UINT NumRects);
+            UINT NumRects) = 0;
 };
-const GUID ID3D11DeviceContext1::guid = {0xbb2c6faa,0xb5fb,0x4082,{0x8e,0x6b,0x38,0x8b,0x8c,0xfa,0x90,0xe1}};
 
 struct ID3D11VideoContext1 : public ID3D11VideoContext
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0xa7f026da,0xa5f8,0x4487,{0xa5,0x64,0x15,0xe3,0x43,0x57,0x65,0x1e}};
 
     virtual HRESULT SubmitDecoderBuffers1(
         ID3D11VideoDecoder *decoder,
         UINT buffer_count,
         const D3D11_VIDEO_DECODER_BUFFER_DESC1 *buffer_desc
-    );
+    ) = 0;
     virtual HRESULT GetDataForNewHardwareKey(
         ID3D11CryptoSession *session,
         UINT input_size,
         const void *input_data,
         UINT64 *output_data
-    );
+    ) = 0;
     virtual HRESULT CheckCryptoSessionStatus(
         ID3D11CryptoSession *session,
         D3D11_CRYPTO_SESSION_STATUS *status
-    );
+    ) = 0;
     virtual HRESULT DecoderEnableDownsampling(
         ID3D11VideoDecoder *decoder,
         DXGI_COLOR_SPACE_TYPE colour_space,
         const D3D11_VIDEO_SAMPLE_DESC *output_desc,
         UINT reference_frame_count
-    );
+    ) = 0;
     virtual HRESULT DecoderUpdateDownsampling(
         ID3D11VideoDecoder *decoder,
         const D3D11_VIDEO_SAMPLE_DESC *output_desc
-    );
+    ) = 0;
     virtual void VideoProcessorSetOutputColorSpace1(
         ID3D11VideoProcessor *processor,
         DXGI_COLOR_SPACE_TYPE colour_space
-    );
+    ) = 0;
     virtual void VideoProcessorSetOutputShaderUsage(
         ID3D11VideoProcessor *processor,
         BOOL shader_usage
-    );
+    ) = 0;
     virtual void VideoProcessorGetOutputColorSpace1(
         ID3D11VideoProcessor *processor,
         DXGI_COLOR_SPACE_TYPE *colour_space
-    );
+    ) = 0;
     virtual void VideoProcessorGetOutputShaderUsage(
         ID3D11VideoProcessor *processor,
         BOOL *shader_usage
-    );
+    ) = 0;
     virtual void VideoProcessorSetStreamColorSpace1(
         ID3D11VideoProcessor *processor,
         UINT stream_index,
         DXGI_COLOR_SPACE_TYPE colour_space
-    );
+    ) = 0;
     virtual void VideoProcessorSetStreamMirror(
         ID3D11VideoProcessor *processor,
         UINT stream_index,
         BOOL enable,
         BOOL flip_horizontal,
         BOOL flip_vertical
-    );
+    ) = 0;
     virtual void VideoProcessorGetStreamColorSpace1(
         ID3D11VideoProcessor *processor,
         UINT stream_index,
         DXGI_COLOR_SPACE_TYPE *colour_space
-    );
+    ) = 0;
     virtual void VideoProcessorGetStreamMirror(
         ID3D11VideoProcessor *processor,
         UINT stream_index,
         BOOL *enable,
         BOOL *flip_horizontal,
         BOOL *flip_vertical
-    );
+    ) = 0;
     virtual HRESULT VideoProcessorGetBehaviorHints(
         ID3D11VideoProcessor *processor,
         UINT output_width,
@@ -404,13 +401,12 @@ struct ID3D11VideoContext1 : public ID3D11VideoContext
         UINT stream_count,
         const D3D11_VIDEO_PROCESSOR_STREAM_BEHAVIOR_HINT *streams,
         UINT *behaviour_hints
-    );
+    ) = 0;
 };
-const GUID ID3D11VideoContext1::guid = {0xa7f026da,0xa5f8,0x4487,{0xa5,0x64,0x15,0xe3,0x43,0x57,0x65,0x1e}};
 
 struct ID3D11VideoDevice1 : public ID3D11VideoDevice
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0x29da1d51,0x1321,0x4454,{0x80,0x4b,0xf5,0xfc,0x9f,0x86,0x1f,0x0f}};
 
     virtual HRESULT GetCryptoSessionPrivateDataSize(
         const GUID *crypto_type,
@@ -418,7 +414,7 @@ struct ID3D11VideoDevice1 : public ID3D11VideoDevice
         const GUID *key_exchange_type,
         UINT *input_size,
         UINT *output_size
-    );
+    ) = 0;
     virtual HRESULT GetVideoDecoderCaps(
         const GUID *decoder_profile,
         UINT sample_width,
@@ -427,7 +423,7 @@ struct ID3D11VideoDevice1 : public ID3D11VideoDevice
         UINT bitrate,
         const GUID *crypto_type,
         UINT *decoder_caps
-    );
+    ) = 0;
     virtual HRESULT CheckVideoDecoderDownsampling(
         const D3D11_VIDEO_DECODER_DESC *input_desc,
         DXGI_COLOR_SPACE_TYPE input_colour_space,
@@ -436,20 +432,19 @@ struct ID3D11VideoDevice1 : public ID3D11VideoDevice
         const D3D11_VIDEO_SAMPLE_DESC *output_desc,
         BOOL *supported,
         BOOL *real_time_hint
-    );
+    ) = 0;
     virtual HRESULT RecommendVideoDecoderDownsampleParameters(
         const D3D11_VIDEO_DECODER_DESC *input_desc,
         DXGI_COLOR_SPACE_TYPE input_colour_space,
         const D3D11_VIDEO_DECODER_CONFIG *input_config,
         const DXGI_RATIONAL *framerate,
         D3D11_VIDEO_SAMPLE_DESC *recommended_output_desc
-    );
+    ) = 0;
 };
-const GUID ID3D11VideoDevice1::guid = {0x29da1d51,0x1321,0x4454,{0x80,0x4b,0xf5,0xfc,0x9f,0x86,0x1f,0x0f}};
 
 struct ID3D11VideoProcessorEnumerator1 : public ID3D11VideoProcessorEnumerator
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0x465217f2,0x5568,0x43cf,{0xb5,0xb9,0xf6,0x1d,0x54,0x53,0x1c,0xa1}};
 
     virtual HRESULT CheckVideoProcessorFormatConversion(
         DXGI_FORMAT input_format,
@@ -457,47 +452,44 @@ struct ID3D11VideoProcessorEnumerator1 : public ID3D11VideoProcessorEnumerator
         DXGI_FORMAT output_format,
         DXGI_COLOR_SPACE_TYPE output_colour_space,
         BOOL *supported
-    );
+    ) = 0;
 };
-const GUID ID3D11VideoProcessorEnumerator1::guid = {0x465217f2,0x5568,0x43cf,{0xb5,0xb9,0xf6,0x1d,0x54,0x53,0x1c,0xa1}};
 
 struct ID3DUserDefinedAnnotation : public IUnknown
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0xb2daad8b,0x03d4,0x4dbf,{0x95,0xeb,0x32,0xab,0x4b,0x63,0xd0,0xab}};
 
-    virtual INT BeginEvent(LPCWSTR Name);
-    virtual INT EndEvent();
-    virtual void SetMarker(LPCWSTR Name);
-    virtual BOOL GetStatus();
+    virtual INT BeginEvent(LPCWSTR Name) = 0;
+    virtual INT EndEvent() = 0;
+    virtual void SetMarker(LPCWSTR Name) = 0;
+    virtual BOOL GetStatus() = 0;
 };
-const GUID ID3DUserDefinedAnnotation::guid = {0xb2daad8b,0x03d4,0x4dbf,{0x95,0xeb,0x32,0xab,0x4b,0x63,0xd0,0xab}};
 
 struct ID3D11RasterizerState1 : public ID3D11RasterizerState
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0x1217d7a6,0x5039,0x418c,{0xb0,0x42,0x9c,0xbe,0x25,0x6a,0xfd,0x6e}};
 
-    virtual void GetDesc1(D3D11_RASTERIZER_DESC1 *pDesc);
+    virtual void GetDesc1(D3D11_RASTERIZER_DESC1 *pDesc) = 0;
 };
-const GUID ID3D11RasterizerState1::guid = {0x1217d7a6,0x5039,0x418c,{0xb0,0x42,0x9c,0xbe,0x25,0x6a,0xfd,0x6e}};
 
 struct ID3D11Device1 : public ID3D11Device
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0xa04bfb29,0x08ef,0x43d6,{0xa4,0x9c,0xa9,0xbd,0xbd,0xcb,0xe6,0x86}};
 
     virtual void GetImmediateContext1(
-            ID3D11DeviceContext1 **ppImmediateContext);
+            ID3D11DeviceContext1 **ppImmediateContext) = 0;
 
     virtual HRESULT CreateDeferredContext1(
             UINT ContextFlags,
-            ID3D11DeviceContext1 **ppDeferredContext);
+            ID3D11DeviceContext1 **ppDeferredContext) = 0;
 
     virtual HRESULT CreateBlendState1(
             const D3D11_BLEND_DESC1 *pBlendStateDesc,
-            ID3D11BlendState1 **ppBlendState);
+            ID3D11BlendState1 **ppBlendState) = 0;
 
     virtual HRESULT CreateRasterizerState1(
             const D3D11_RASTERIZER_DESC1 *pRasterizerDesc,
-            ID3D11RasterizerState1 **ppRasterizerState);
+            ID3D11RasterizerState1 **ppRasterizerState) = 0;
 
     virtual HRESULT CreateDeviceContextState(
             UINT Flags,
@@ -506,19 +498,18 @@ struct ID3D11Device1 : public ID3D11Device
             UINT SDKVersion,
             REFIID EmulatedInterface,
             D3D_FEATURE_LEVEL *pChosenFeatureLevel,
-            ID3DDeviceContextState **ppContextState);
+            ID3DDeviceContextState **ppContextState) = 0;
 
     virtual HRESULT OpenSharedResource1(
             HANDLE hResource,
             REFIID returnedInterface,
-            void **ppResource);
+            void **ppResource) = 0;
 
      virtual HRESULT OpenSharedResourceByName(
             LPCWSTR lpName,
             DWORD dwDesiredAccess,
             REFIID returnedInterface,
-            void **ppResource);
+            void **ppResource) = 0;
 };
-const GUID ID3D11Device1::guid = {0xa04bfb29,0x08ef,0x43d6,{0xa4,0x9c,0xa9,0xbd,0xbd,0xcb,0xe6,0x86}};
 
 #endif

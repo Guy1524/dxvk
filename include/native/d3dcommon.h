@@ -35,12 +35,11 @@ typedef struct _D3D_SHADER_MACRO* LPD3D_SHADER_MACRO;
 
 struct ID3D10Blob : public IUnknown
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0x8ba5fb08,0x5195,0x40e2,{0xac,0x58,0x0d,0x98,0x9c,0x3a,0x01,0x02}};
 
-    virtual void *GetBufferPointer();
-    virtual SIZE_T GetBufferSize();
+    virtual void *GetBufferPointer() = 0;
+    virtual SIZE_T GetBufferSize() = 0;
 };
-const GUID ID3D10Blob::guid = {0x8ba5fb08,0x5195,0x40e2,{0xac,0x58,0x0d,0x98,0x9c,0x3a,0x01,0x02}};
 
 typedef ID3D10Blob* LPD3D10BLOB;
 typedef ID3D10Blob ID3DBlob;

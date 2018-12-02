@@ -52,66 +52,61 @@ typedef enum DXGI_OVERLAY_SUPPORT_FLAG
 
 struct IDXGIDevice3 : public IDXGIDevice2
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0x6007896c,0x3244,0x4afd,{0xbf,0x18,0xa6,0xd3,0xbe,0xda,0x50,0x23}};
 
-    virtual void Trim();
+    virtual void Trim() = 0;
 };
-const GUID IDXGIDevice3::guid = {0x6007896c,0x3244,0x4afd,{0xbf,0x18,0xa6,0xd3,0xbe,0xda,0x50,0x23}};
 
 struct IDXGISwapChain2 : public IDXGISwapChain1
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0xa8be2ac4,0x199f,0x4946,{0xb3,0x31,0x79,0x59,0x9f,0xb9,0x8d,0xe7}};
 
-    virtual HRESULT SetSourceSize(UINT width, UINT height);
+    virtual HRESULT SetSourceSize(UINT width, UINT height) = 0;
 
     virtual HRESULT GetSourceSize(
         /*out*/ UINT *width,
         /*out*/ UINT *height
-    );
+    ) = 0;
 
-    virtual HRESULT SetMaximumFrameLatency(UINT max_latency);
+    virtual HRESULT SetMaximumFrameLatency(UINT max_latency) = 0;
 
     virtual HRESULT GetMaximumFrameLatency(
         /*out*/ UINT *max_latency
-    );
+    ) = 0;
 
-    virtual HANDLE  GetFrameLatencyWaitableObject();
+    virtual HANDLE  GetFrameLatencyWaitableObject() = 0;
 
-    virtual HRESULT SetMatrixTransform(const DXGI_MATRIX_3X2_F *matrix);
+    virtual HRESULT SetMatrixTransform(const DXGI_MATRIX_3X2_F *matrix) = 0;
 
     virtual HRESULT GetMatrixTransform(
         /*out*/ DXGI_MATRIX_3X2_F *matrix
-    );
+    ) = 0;
 };
-const GUID IDXGISwapChain2::guid = {0xa8be2ac4,0x199f,0x4946,{0xb3,0x31,0x79,0x59,0x9f,0xb9,0x8d,0xe7}};
 
 struct IDXGIOutput2 : public IDXGIOutput1
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0x595e39d1,0x2724,0x4663,{0x99,0xb1,0xda,0x96,0x9d,0xe2,0x83,0x64}};
 
-    virtual BOOL SupportsOverlays();
+    virtual BOOL SupportsOverlays() = 0;
 };
-const GUID IDXGIOutput2::guid = {0x595e39d1,0x2724,0x4663,{0x99,0xb1,0xda,0x96,0x9d,0xe2,0x83,0x64}};
 
 struct IDXGIFactory3 : public IDXGIFactory2
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0x25483823,0xcd46,0x4c7d,{0x86,0xca,0x47,0xaa,0x95,0xb8,0x37,0xbd}};
 
-    virtual UINT GetCreationFlags();
+    virtual UINT GetCreationFlags() = 0;
 };
-const GUID IDXGIFactory3::guid = {0x25483823,0xcd46,0x4c7d,{0x86,0xca,0x47,0xaa,0x95,0xb8,0x37,0xbd}};
 
 struct IDXGIOutput3 : public IDXGIOutput2
 {
-    static const GUID guid;
+    static constexpr GUID guid = {0x8a6bb301,0x7e7e,0x41F4,{0xa8,0xe0,0x5b,0x32,0xf7,0xf9,0x9b,0x18}};
 
     virtual HRESULT CheckOverlaySupport(
         /*in*/ DXGI_FORMAT enum_format,
         /*out*/ IUnknown *concerned_device,
         /*out*/ UINT *flags
-    );
+    ) = 0;
 };
-const GUID IDXGIOutput3::guid = {0x8a6bb301,0x7e7e,0x41F4,{0xa8,0xe0,0x5b,0x32,0xf7,0xf9,0x9b,0x18}};
 
 const UINT DXGI_CREATE_FACTORY_DEBUG = 0x1;
 
