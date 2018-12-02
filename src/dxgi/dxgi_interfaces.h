@@ -82,6 +82,10 @@ IDXGIVkDevice : public IDXGIDevice3 {
   virtual dxvk::Rc<dxvk::DxvkDevice> STDMETHODCALLTYPE GetDXVKDevice() = 0;
   
   virtual dxvk::Rc<dxvk::DxvkEvent> STDMETHODCALLTYPE GetFrameSyncEvent() = 0;
+
+#ifdef DXVK_NATIVE
+  virtual GLFWwindow* CreateGLFWWindow(const GLFW_WINDOW_DESC *window_desc) = 0;
+#endif
 };
 
 

@@ -15,10 +15,6 @@ namespace dxvk {
     m_config.merge(Config::getAppConfig(env::getExeName()));
     m_config.logOptions();
 
-#ifdef DXVK_NATIVE
-    glfwInit();
-#endif
-
     g_vrInstance.initInstanceExtensions();
 
     m_vkl = new vk::LibraryFn();
@@ -67,7 +63,6 @@ namespace dxvk {
     
     // Enable additional extensions if necessary
     extensionsEnabled.merge(g_vrInstance.getInstanceExtensions());
-    DxvkNameList extensionNameList = extensionsEnabled.toNameList();
     
 #ifdef DXVK_NATIVE
     uint32_t len;
@@ -82,7 +77,11 @@ namespace dxvk {
     {
       glfw_required.add( (const char*) glfw_required_raw[i]);
     }
+
+    extensionsEnabled.merge(glfw_required);
 #endif
+
+    DxvkNameList extensionNameList = extensionsEnabled.toNameList();
 
     Logger::info("Enabled instance extensions:");
     this->logNameList(extensionNameList);

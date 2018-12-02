@@ -92,6 +92,10 @@ namespace dxvk {
     Rc<DxvkDevice> STDMETHODCALLTYPE GetDXVKDevice() final;
 
     Rc<DxvkEvent> STDMETHODCALLTYPE GetFrameSyncEvent() final;
+
+#ifdef DXVK_NATIVE
+    GLFWwindow* CreateGLFWWindow(const GLFW_WINDOW_DESC *window_desc) final;
+#endif
     
   private:
     

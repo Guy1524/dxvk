@@ -1,7 +1,9 @@
 #include <cstdlib>
 #include <cstring>
 
+#ifndef DXVK_NATIVE
 #include <d3d10_1.h>
+#endif
 
 #include "dxgi_adapter.h"
 #include "dxgi_device.h"
@@ -60,11 +62,13 @@ namespace dxvk {
 
     if (pUMDVersion != nullptr)
       *pUMDVersion = LARGE_INTEGER();
-    
+
     if (options->d3d10Enable) {
+#ifndef DXVK_NATIVE
       if (InterfaceName == __uuidof(ID3D10Device)
        || InterfaceName == __uuidof(ID3D10Device1))
         return S_OK;
+#endif
     }
     
     Logger::err("DXGI: CheckInterfaceSupport: Unsupported interface");
@@ -86,8 +90,12 @@ namespace dxvk {
       return DXGI_ERROR_NOT_FOUND;
     }
     
-    // TODO support multiple monitors
+// TODO support multiple monitors
+#ifndef DXVK_NATIVE
     HMONITOR monitor = ::MonitorFromPoint({ 0, 0 }, MONITOR_DEFAULTTOPRIMARY);
+#else
+    HMONITOR monitor = glfwGetPrimaryMonitor();
+#endif
     *ppOutput = ref(new DxgiOutput(this, monitor));
     return S_OK;
   }
@@ -143,6 +151,10 @@ namespace dxvk {
   
   
   HRESULT STDMETHODCALLTYPE DxgiAdapter::GetDesc2(DXGI_ADAPTER_DESC2* pDesc) {
+    #ifdef DXVK_NATIVE
+      Logger::warn("Don't use DXGI in native apps");
+    #endif
+    
     if (pDesc == nullptr)
       return DXGI_ERROR_INVALID_CALL;
     
@@ -166,10 +178,15 @@ namespace dxvk {
       deviceProp.deviceID = 0x67df; /* RX 480 */
     }
     
+    #ifndef DXVK_NATIVE
     // Convert device name
     std::memset(pDesc->Description, 0, sizeof(pDesc->Description));
     ::MultiByteToWideChar(CP_UTF8, 0, deviceProp.deviceName, -1,
         pDesc->Description, sizeof(pDesc->Description) / sizeof(*pDesc->Description));
+    #else
+      std::memset(pDesc->Description, 0, sizeof(pDesc->Description));
+      std::memcpy(pDesc->Description, deviceProp.deviceName, sizeof(pDesc->Description));
+    #endif
     
     // Get amount of video memory
     // based on the Vulkan heaps

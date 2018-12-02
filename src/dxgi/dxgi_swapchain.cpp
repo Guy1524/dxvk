@@ -92,6 +92,7 @@ namespace dxvk {
   
   
   HRESULT STDMETHODCALLTYPE DxgiSwapChain::GetContainingOutput(IDXGIOutput** ppOutput) {
+#ifndef DXVK_NATIVE
     InitReturnPtr(ppOutput);
     
     if (!IsWindow(m_window))
@@ -106,6 +107,10 @@ namespace dxvk {
       MONITOR_DEFAULTTOPRIMARY);
     
     return m_adapter->GetOutputFromMonitor(monitor, ppOutput);
+#else
+    Logger::err("DxgiSwapChain::GetContainingOutput unsupported on native build, use GLFW");
+    return DXGI_ERROR_UNSUPPORTED;
+#endif
   }
   
   
@@ -174,6 +179,7 @@ namespace dxvk {
   HRESULT STDMETHODCALLTYPE DxgiSwapChain::GetFullscreenState(
           BOOL*         pFullscreen,
           IDXGIOutput** ppTarget) {
+#ifndef DXVK_NATIVE
     if (!IsWindow(m_window))
       return DXGI_ERROR_INVALID_CALL;
     
@@ -190,6 +196,10 @@ namespace dxvk {
     }
     
     return hr;
+#else
+    Logger::err("DxgiSwapChain::GetFullscreenState unsupported on native build, use GLFW");
+    return DXGI_ERROR_UNSUPPORTED;
+#endif
   }
   
   
@@ -248,8 +258,10 @@ namespace dxvk {
           UINT                      SyncInterval,
           UINT                      PresentFlags,
     const DXGI_PRESENT_PARAMETERS*  pPresentParameters) {
+#ifndef DXVK_NATIVE
     if (!IsWindow(m_window))
       return DXGI_ERROR_INVALID_CALL;
+#endif
     
     if (PresentFlags & DXGI_PRESENT_TEST)
       return S_OK;
@@ -327,6 +339,7 @@ namespace dxvk {
 
 
   HRESULT STDMETHODCALLTYPE DxgiSwapChain::ResizeTarget(const DXGI_MODE_DESC* pNewTargetParameters) {
+#ifndef DXVK_NATIVE
     std::lock_guard<std::mutex> lock(m_lockWindow);
 
     if (pNewTargetParameters == nullptr)
@@ -379,6 +392,10 @@ namespace dxvk {
     }
     
     return S_OK;
+#else
+    Logger::err("DxgiSwapChain::ResizeTarget is unsupported on native builds, use GLFW");
+    return DXGI_ERROR_UNSUPPORTED;
+#endif
   }
   
   
@@ -499,6 +516,7 @@ namespace dxvk {
   
   
   VkExtent2D DxgiSwapChain::GetWindowSize() const {
+#ifndef DXVK_NATIVE
     RECT windowRect;
     
     if (!::GetClientRect(m_window, &windowRect))
@@ -508,10 +526,22 @@ namespace dxvk {
     result.width  = windowRect.right;
     result.height = windowRect.bottom;
     return result;
+#else
+    VkExtent2D result;
+    int width, height;
+
+    glfwGetWindowSize(m_window, &width, &height);
+    
+    result.width  = (uint32_t) width;
+    result.height = (uint32_t) height;
+
+    return result;
+#endif
   }
   
   
   HRESULT DxgiSwapChain::EnterFullscreenMode(IDXGIOutput* pTarget) {
+#ifndef DXVK_NATIVE
     Com<IDXGIOutput> output = static_cast<DxgiOutput*>(pTarget);
 
     if (!IsWindow(m_window))
@@ -570,10 +600,15 @@ namespace dxvk {
     
     m_monitor = desc.Monitor;
     return S_OK;
+#else
+    Logger::err("DxgiSwapChain::EnterFullscreenMode unsupported in native builds, use GLFW");
+    return DXGI_ERROR_UNSUPPORTED;
+#endif
   }
   
   
   HRESULT DxgiSwapChain::LeaveFullscreenMode() {
+#ifndef DXVK_NATIVE
     Com<IDXGIOutput> output;
 
     if (!IsWindow(m_window))
@@ -606,6 +641,10 @@ namespace dxvk {
       SWP_FRAMECHANGED | SWP_NOZORDER | SWP_NOACTIVATE);
     
     return SetDefaultGammaControl();
+#else
+    Logger::err("DxgiSwapChain::LeaveFullscreenMode unsupported in native builds, use GLFW");
+    return DXGI_ERROR_UNSUPPORTED;
+#endif
   }
   
   
@@ -641,6 +680,7 @@ namespace dxvk {
   
   
   HRESULT DxgiSwapChain::RestoreDisplayMode(IDXGIOutput* pOutput) {
+#ifndef DXVK_NATIVE
     auto output = static_cast<DxgiOutput*>(pOutput);
     
     if (output == nullptr)
@@ -656,6 +696,10 @@ namespace dxvk {
       return hr;
     
     return output->SetDisplayMode(&mode);
+#else
+    Logger::err("DxgiSwapChain::RestoreDisplayMode unsupported in native builds, use GLFW");
+    return DXGI_ERROR_UNSUPPORTED;
+#endif
   }
   
   

@@ -190,5 +190,24 @@ namespace dxvk {
     uint32_t frameId = m_frameId++ % frameLatency;
     return m_frameEvents[frameId];
   }
+
+#ifdef DXVK_NATIVE
+  GLFWwindow* DxgiDevice::CreateGLFWWindow(const GLFW_WINDOW_DESC* window_desc) {
+
+    glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+    if(window_desc->resizable)
+      glfwWindowHint(GLFW_RESIZABLE, window_desc->resizable);
+
+    GLFWwindow *window = glfwCreateWindow(
+      window_desc->width, window_desc->height, window_desc->title, window_desc->fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
+
+    if(!window)
+    {
+      Logger::err("Failed to create window");
+    }
+
+    return window;
+  }
+#endif
   
 }

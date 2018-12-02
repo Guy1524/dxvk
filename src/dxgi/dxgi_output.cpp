@@ -71,6 +71,7 @@ namespace dxvk {
     const DXGI_MODE_DESC *pModeToMatch,
           DXGI_MODE_DESC *pClosestMatch,
           IUnknown       *pConcernedDevice) {
+#ifndef DXVK_NATIVE
     if (!pModeToMatch || !pClosestMatch)
       return DXGI_ERROR_INVALID_CALL;
     
@@ -98,6 +99,10 @@ namespace dxvk {
     pClosestMatch->ScanlineOrdering = closestMatch.ScanlineOrdering;
     pClosestMatch->Scaling          = closestMatch.Scaling;
     return hr;
+#else
+    Logger::err("DxgiOutput::FindClosestMatchingMode1 unsupported on native builds, use GLFW");
+    return DXGI_ERROR_UNSUPPORTED;
+#endif
   }
   
   
@@ -105,6 +110,7 @@ namespace dxvk {
     const DXGI_MODE_DESC1*      pModeToMatch,
           DXGI_MODE_DESC1*      pClosestMatch,
           IUnknown*             pConcernedDevice) {
+#ifndef DXVK_NATIVE
     if (!pModeToMatch || !pClosestMatch)
       return DXGI_ERROR_INVALID_CALL;
 
@@ -189,6 +195,10 @@ namespace dxvk {
     }
 
     return S_OK;
+#else
+    Logger::err("DxgiOutput::FindClosestMatchingMode1 unsupported on native builds, use GLFW");
+    return DXGI_ERROR_UNSUPPORTED;
+#endif
   }
 
 
@@ -196,6 +206,7 @@ namespace dxvk {
     if (pDesc == nullptr)
       return DXGI_ERROR_INVALID_CALL;
     
+#ifndef DXVK_NATIVE
     ::MONITORINFOEXW monInfo;
     monInfo.cbSize = sizeof(monInfo);
 
@@ -207,6 +218,26 @@ namespace dxvk {
     std::memcpy(pDesc->DeviceName, monInfo.szDevice, std::size(pDesc->DeviceName));
     
     pDesc->DesktopCoordinates = monInfo.rcMonitor;
+#else
+    Logger::warn("pDesc->Monitor is a GLFWmonitor*, not a HWND");
+    Logger::warn("pDesc->DeviceName is a char[32], not WCHAR[32]");
+
+    std::memset(pDesc->DeviceName, 0, 32);
+    const char *device_name = glfwGetMonitorName(m_monitor);
+    std::memcpy(pDesc->DeviceName, device_name, strlen(device_name));
+
+    RECT desktop_coords;
+
+    int left, top;
+    glfwGetMonitorPos(m_monitor, &left, &top);
+    desktop_coords.left = (long) left;
+    desktop_coords.top  = (long) top;
+
+    int width, height;
+    glfwGetMonitorPhysicalSize(m_monitor, &width, &height);
+    desktop_coords.right  = desktop_coords.left + (long) width;
+    desktop_coords.bottom = desktop_coords.top + (long) height;
+#endif
     pDesc->AttachedToDesktop  = 1;
     pDesc->Rotation           = DXGI_MODE_ROTATION_UNSPECIFIED;
     pDesc->Monitor            = m_monitor;
@@ -252,6 +283,7 @@ namespace dxvk {
     if (pNumModes == nullptr)
       return DXGI_ERROR_INVALID_CALL;
     
+    #ifndef DXVK_NATIVE
     // Query monitor info to get the device name
     ::MONITORINFOEXW monInfo;
     monInfo.cbSize = sizeof(monInfo);
@@ -293,6 +325,36 @@ namespace dxvk {
       
       dstModeId += 1;
     }
+    #else
+      std::vector<DXGI_MODE_DESC1> modeList;
+
+      int mode_count;
+      const GLFWvidmode *modes = glfwGetVideoModes(m_monitor, &mode_count);
+
+      uint32_t dstModeId = 0;
+
+      for(unsigned int i = 0; i < (uint32_t)mode_count; i++)
+      {
+        const GLFWvidmode *vidmode = modes + i;
+
+        if((uint32_t)vidmode->redBits != GetFormatBpp(EnumFormat)) continue;
+
+        if(pDesc != nullptr)
+        {
+          DXGI_MODE_DESC1 mode;
+          mode.Width            = (uint32_t) vidmode->width;
+          mode.Height           = (uint32_t) vidmode->height;
+          mode.RefreshRate      = {(uint32_t)vidmode->refreshRate * 1000, 1000};
+          mode.Format           = EnumFormat;
+          mode.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE;
+          mode.Scaling          = DXGI_MODE_SCALING_UNSPECIFIED;
+          mode.Stereo           = FALSE;
+          modeList.push_back(mode);
+        }
+
+        dstModeId += 1;
+      }
+    #endif
     
     // Sort display modes by width, height and refresh rate,
     // in that order. Some games rely on correct ordering.
@@ -456,6 +518,7 @@ namespace dxvk {
 
 
   HRESULT DxgiOutput::GetDisplayMode(DXGI_MODE_DESC* pMode, DWORD ModeNum) {
+#ifndef DXVK_NATIVE
     ::MONITORINFOEXW monInfo;
     monInfo.cbSize = sizeof(monInfo);
 
@@ -473,6 +536,20 @@ namespace dxvk {
     pMode->Width            = devMode.dmPelsWidth;
     pMode->Height           = devMode.dmPelsHeight;
     pMode->RefreshRate      = { devMode.dmDisplayFrequency, 1 };
+#else
+    if(ModeNum != ENUM_CURRENT_SETTINGS)
+    {
+      Logger::err("DxgiOutput::GetDisplayMode with ModeNum != ENUM_CURRENT_SETTINGS unsupported on native builds");
+      return DXGI_ERROR_UNSUPPORTED;
+    }
+    const GLFWvidmode* vidmode = glfwGetVideoMode(m_monitor);
+
+    pMode->Width            = (uint32_t) vidmode->width;
+    pMode->Height           = (uint32_t) vidmode->height;
+    pMode->RefreshRate      = {(uint32_t) vidmode->refreshRate * 1000, 1000};
+
+
+#endif
     pMode->Format           = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB; // FIXME
     pMode->ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE;
     pMode->Scaling          = DXGI_MODE_SCALING_UNSPECIFIED;
@@ -481,6 +558,7 @@ namespace dxvk {
   
     
   HRESULT DxgiOutput::SetDisplayMode(const DXGI_MODE_DESC* pMode) {
+#ifndef DXVK_NATIVE
     ::MONITORINFOEXW monInfo;
     monInfo.cbSize = sizeof(monInfo);
 
@@ -509,7 +587,11 @@ namespace dxvk {
     LONG status = ::ChangeDisplaySettingsExW(
       monInfo.szDevice, &devMode, nullptr, CDS_FULLSCREEN, nullptr);
     
-    return status == DISP_CHANGE_SUCCESSFUL ? S_OK : DXGI_ERROR_NOT_CURRENTLY_AVAILABLE;;
+    return status == DISP_CHANGE_SUCCESSFUL ? S_OK : DXGI_ERROR_NOT_CURRENTLY_AVAILABLE;
+#else
+    Logger::err("DxgiOutput::SetDisplayMode unsupported on native build");
+    return DXGI_ERROR_UNSUPPORTED;
+#endif
   }
   
   
