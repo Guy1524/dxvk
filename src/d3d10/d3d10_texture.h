@@ -21,48 +21,48 @@ namespace dxvk {
 
     HRESULT STDMETHODCALLTYPE QueryInterface(
             REFIID                    riid,
-            void**                    ppvObject);
+            void**                    ppvObject) FAKE;
 
-    ULONG STDMETHODCALLTYPE AddRef();
+    ULONG STDMETHODCALLTYPE AddRef() FAKE;
 
-    ULONG STDMETHODCALLTYPE Release();
+    ULONG STDMETHODCALLTYPE Release() FAKE;
 
     void STDMETHODCALLTYPE GetDevice(
-            ID3D10Device**            ppDevice);
+            ID3D10Device**            ppDevice) FAKE;
 
     HRESULT STDMETHODCALLTYPE GetPrivateData(
             REFGUID                   guid,
             UINT*                     pDataSize,
-            void*                     pData);
+            void*                     pData) FAKE;
 
     HRESULT STDMETHODCALLTYPE SetPrivateData(
             REFGUID                   guid,
             UINT                      DataSize,
-      const void*                     pData);
+      const void*                     pData) FAKE;
 
     HRESULT STDMETHODCALLTYPE SetPrivateDataInterface(
             REFGUID                   guid,
-      const IUnknown*                 pData);
+      const IUnknown*                 pData) FAKE;
 
     void STDMETHODCALLTYPE GetType(
-            D3D10_RESOURCE_DIMENSION* rType);
+            D3D10_RESOURCE_DIMENSION* rType) FAKE;
 
     void STDMETHODCALLTYPE SetEvictionPriority(
-            UINT                      EvictionPriority);
+            UINT                      EvictionPriority) FAKE;
 
-    UINT STDMETHODCALLTYPE GetEvictionPriority();
+    UINT STDMETHODCALLTYPE GetEvictionPriority() FAKE;
 
     HRESULT STDMETHODCALLTYPE Map(
             UINT                      Subresource,
             D3D10_MAP                 MapType,
             UINT                      MapFlags,
-            void**                    ppData);
+            void**                    ppData) FAKE;
 
     void STDMETHODCALLTYPE Unmap(
-            UINT                      Subresource);
+            UINT                      Subresource) FAKE;
 
     void STDMETHODCALLTYPE GetDesc(
-            D3D10_TEXTURE1D_DESC*     pDesc);
+            D3D10_TEXTURE1D_DESC*     pDesc) FAKE;
     
     D3D11Texture1D* GetD3D11Iface() {
       return m_d3d11;
@@ -87,48 +87,48 @@ namespace dxvk {
 
     HRESULT STDMETHODCALLTYPE QueryInterface(
             REFIID                    riid,
-            void**                    ppvObject);
+            void**                    ppvObject) FAKE;
 
-    ULONG STDMETHODCALLTYPE AddRef();
+    ULONG STDMETHODCALLTYPE AddRef() FAKE;
 
-    ULONG STDMETHODCALLTYPE Release();
+    ULONG STDMETHODCALLTYPE Release() FAKE;
 
     void STDMETHODCALLTYPE GetDevice(
-            ID3D10Device**            ppDevice);
+            ID3D10Device**            ppDevice) FAKE;
 
     HRESULT STDMETHODCALLTYPE GetPrivateData(
             REFGUID                   guid,
             UINT*                     pDataSize,
-            void*                     pData);
+            void*                     pData) FAKE;
 
     HRESULT STDMETHODCALLTYPE SetPrivateData(
             REFGUID                   guid,
             UINT                      DataSize,
-      const void*                     pData);
+      const void*                     pData) FAKE;
 
     HRESULT STDMETHODCALLTYPE SetPrivateDataInterface(
             REFGUID                   guid,
-      const IUnknown*                 pData);
+      const IUnknown*                 pData) FAKE;
 
     void STDMETHODCALLTYPE GetType(
-            D3D10_RESOURCE_DIMENSION* rType);
+            D3D10_RESOURCE_DIMENSION* rType) FAKE;
 
     void STDMETHODCALLTYPE SetEvictionPriority(
-            UINT                      EvictionPriority);
+            UINT                      EvictionPriority) FAKE;
 
-    UINT STDMETHODCALLTYPE GetEvictionPriority();
+    UINT STDMETHODCALLTYPE GetEvictionPriority() FAKE;
 
     HRESULT STDMETHODCALLTYPE Map(
             UINT                      Subresource,
             D3D10_MAP                 MapType,
             UINT                      MapFlags,
-            D3D10_MAPPED_TEXTURE2D*   pMappedTex2D);
+            D3D10_MAPPED_TEXTURE2D*   pMappedTex2D) FAKE;
 
     void STDMETHODCALLTYPE Unmap(
-            UINT                      Subresource);
+            UINT                      Subresource) FAKE;
 
     void STDMETHODCALLTYPE GetDesc(
-            D3D10_TEXTURE2D_DESC*     pDesc);
+            D3D10_TEXTURE2D_DESC*     pDesc) FAKE;
     
     D3D11Texture2D* GetD3D11Iface() {
       return m_d3d11;
@@ -153,48 +153,48 @@ namespace dxvk {
 
     HRESULT STDMETHODCALLTYPE QueryInterface(
             REFIID                    riid,
-            void**                    ppvObject);
+            void**                    ppvObject) FAKE;
 
-    ULONG STDMETHODCALLTYPE AddRef();
+    ULONG STDMETHODCALLTYPE AddRef() FAKE;
 
-    ULONG STDMETHODCALLTYPE Release();
+    ULONG STDMETHODCALLTYPE Release() FAKE;
 
     void STDMETHODCALLTYPE GetDevice(
-            ID3D10Device**            ppDevice);
+            ID3D10Device**            ppDevice) FAKE;
 
     HRESULT STDMETHODCALLTYPE GetPrivateData(
             REFGUID                   guid,
             UINT*                     pDataSize,
-            void*                     pData);
+            void*                     pData) FAKE;
 
     HRESULT STDMETHODCALLTYPE SetPrivateData(
             REFGUID                   guid,
             UINT                      DataSize,
-      const void*                     pData);
+      const void*                     pData) FAKE;
 
     HRESULT STDMETHODCALLTYPE SetPrivateDataInterface(
             REFGUID                   guid,
-      const IUnknown*                 pData);
+      const IUnknown*                 pData) FAKE;
 
     void STDMETHODCALLTYPE GetType(
-            D3D10_RESOURCE_DIMENSION* rType);
+            D3D10_RESOURCE_DIMENSION* rType) FAKE;
 
     void STDMETHODCALLTYPE SetEvictionPriority(
-            UINT                      EvictionPriority);
+            UINT                      EvictionPriority) FAKE;
 
-    UINT STDMETHODCALLTYPE GetEvictionPriority();
+    UINT STDMETHODCALLTYPE GetEvictionPriority() FAKE;
 
     HRESULT STDMETHODCALLTYPE Map(
             UINT                      Subresource,
             D3D10_MAP                 MapType,
             UINT                      MapFlags,
-            D3D10_MAPPED_TEXTURE3D*   pMappedTex3D);
+            D3D10_MAPPED_TEXTURE3D*   pMappedTex3D) FAKE;
 
     void STDMETHODCALLTYPE Unmap(
-            UINT                      Subresource);
+            UINT                      Subresource) FAKE;
 
     void STDMETHODCALLTYPE GetDesc(
-            D3D10_TEXTURE3D_DESC*     pDesc);
+            D3D10_TEXTURE3D_DESC*     pDesc) FAKE;
     
     D3D11Texture3D* GetD3D11Iface() {
       return m_d3d11;

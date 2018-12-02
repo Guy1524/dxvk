@@ -18,42 +18,42 @@ namespace dxvk {
 
     HRESULT STDMETHODCALLTYPE QueryInterface(
             REFIID                    riid,
-            void**                    ppvObject);
+            void**                    ppvObject) FAKE;
 
-    ULONG STDMETHODCALLTYPE AddRef();
+    ULONG STDMETHODCALLTYPE AddRef() FAKE;
 
-    ULONG STDMETHODCALLTYPE Release();
+    ULONG STDMETHODCALLTYPE Release() FAKE;
 
     void STDMETHODCALLTYPE GetDevice(
-            ID3D10Device**            ppDevice);
+            ID3D10Device**            ppDevice) FAKE;
 
     HRESULT STDMETHODCALLTYPE GetPrivateData(
             REFGUID                   guid,
             UINT*                     pDataSize,
-            void*                     pData);
+            void*                     pData) FAKE;
 
     HRESULT STDMETHODCALLTYPE SetPrivateData(
             REFGUID                   guid,
             UINT                      DataSize,
-      const void*                     pData);
+      const void*                     pData) FAKE;
 
     HRESULT STDMETHODCALLTYPE SetPrivateDataInterface(
             REFGUID                   guid,
-      const IUnknown*                 pData);
+      const IUnknown*                 pData) FAKE;
 
-    void STDMETHODCALLTYPE Begin();
+    void STDMETHODCALLTYPE Begin() FAKE;
 
-    void STDMETHODCALLTYPE End();
+    void STDMETHODCALLTYPE End() FAKE;
 
     HRESULT STDMETHODCALLTYPE GetData(
             void*                     pData,
             UINT                      DataSize,
-            UINT                      GetDataFlags);
+            UINT                      GetDataFlags) FAKE;
 
-    UINT STDMETHODCALLTYPE GetDataSize();
+    UINT STDMETHODCALLTYPE GetDataSize() FAKE;
     
     void STDMETHODCALLTYPE GetDesc(
-            D3D10_QUERY_DESC*         pDesc);
+            D3D10_QUERY_DESC*         pDesc) FAKE;
     
     D3D11Query* GetD3D11Iface() {
       return m_d3d11;

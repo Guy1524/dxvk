@@ -16,101 +16,101 @@ namespace dxvk {
 
     D3D10Device(
             D3D11Device*                      pDevice,
-            D3D11ImmediateContext*            pContext);
+            D3D11ImmediateContext*            pContext) FAKE;
     
-    ~D3D10Device();
+    ~D3D10Device() FAKE;
 
     HRESULT STDMETHODCALLTYPE QueryInterface(
             REFIID                            riid,
-            void**                            ppvObject);
+            void**                            ppvObject) FAKE;
 
-    ULONG STDMETHODCALLTYPE AddRef();
+    ULONG STDMETHODCALLTYPE AddRef() FAKE;
 
-    ULONG STDMETHODCALLTYPE Release();
+    ULONG STDMETHODCALLTYPE Release() FAKE;
 
     HRESULT STDMETHODCALLTYPE GetPrivateData(
             REFGUID                           guid,
             UINT*                             pDataSize,
-            void*                             pData);
+            void*                             pData) FAKE;
 
     HRESULT STDMETHODCALLTYPE SetPrivateData(
             REFGUID                           guid,
             UINT                              DataSize,
-      const void*                             pData);
+      const void*                             pData) FAKE;
 
     HRESULT STDMETHODCALLTYPE SetPrivateDataInterface(
             REFGUID                           guid,
-      const IUnknown*                         pData);
+      const IUnknown*                         pData) FAKE;
 
-    HRESULT STDMETHODCALLTYPE GetDeviceRemovedReason();
+    HRESULT STDMETHODCALLTYPE GetDeviceRemovedReason() FAKE;
 
     HRESULT STDMETHODCALLTYPE SetExceptionMode(
-            UINT                              RaiseFlags);
+            UINT                              RaiseFlags) FAKE;
 
-    UINT STDMETHODCALLTYPE GetExceptionMode();
+    UINT STDMETHODCALLTYPE GetExceptionMode() FAKE;
 
-    D3D10_FEATURE_LEVEL1 STDMETHODCALLTYPE GetFeatureLevel();
+    D3D10_FEATURE_LEVEL1 STDMETHODCALLTYPE GetFeatureLevel() FAKE;
 
-    void STDMETHODCALLTYPE ClearState();
+    void STDMETHODCALLTYPE ClearState() FAKE;
 
-    void STDMETHODCALLTYPE Flush();
+    void STDMETHODCALLTYPE Flush() FAKE;
 
     HRESULT STDMETHODCALLTYPE CreateBuffer(
       const D3D10_BUFFER_DESC*                pDesc,
       const D3D10_SUBRESOURCE_DATA*           pInitialData,
-            ID3D10Buffer**                    ppBuffer);
+            ID3D10Buffer**                    ppBuffer) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreateTexture1D(
       const D3D10_TEXTURE1D_DESC*             pDesc,
       const D3D10_SUBRESOURCE_DATA*           pInitialData,
-            ID3D10Texture1D**                 ppTexture1D);
+            ID3D10Texture1D**                 ppTexture1D) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreateTexture2D(
       const D3D10_TEXTURE2D_DESC*             pDesc,
       const D3D10_SUBRESOURCE_DATA*           pInitialData,
-            ID3D10Texture2D**                 ppTexture2D);
+            ID3D10Texture2D**                 ppTexture2D) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreateTexture3D(
       const D3D10_TEXTURE3D_DESC*             pDesc,
       const D3D10_SUBRESOURCE_DATA*           pInitialData,
-            ID3D10Texture3D**                 ppTexture3D);
+            ID3D10Texture3D**                 ppTexture3D) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreateShaderResourceView(
             ID3D10Resource*                   pResource,
       const D3D10_SHADER_RESOURCE_VIEW_DESC*  pDesc,
-            ID3D10ShaderResourceView**        ppSRView);
+            ID3D10ShaderResourceView**        ppSRView) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreateShaderResourceView1(
             ID3D10Resource*                   pResource,
       const D3D10_SHADER_RESOURCE_VIEW_DESC1* pDesc,
-            ID3D10ShaderResourceView1**       ppSRView);
+            ID3D10ShaderResourceView1**       ppSRView) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreateRenderTargetView(
             ID3D10Resource*                   pResource,
       const D3D10_RENDER_TARGET_VIEW_DESC*    pDesc,
-            ID3D10RenderTargetView**          ppRTView);
+            ID3D10RenderTargetView**          ppRTView) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreateDepthStencilView(
             ID3D10Resource*                   pResource,
       const D3D10_DEPTH_STENCIL_VIEW_DESC*    pDesc,
-            ID3D10DepthStencilView**          ppDepthStencilView);
+            ID3D10DepthStencilView**          ppDepthStencilView) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreateInputLayout(
       const D3D10_INPUT_ELEMENT_DESC*         pInputElementDescs,
             UINT                              NumElements,
       const void*                             pShaderBytecodeWithInputSignature,
             SIZE_T                            BytecodeLength,
-            ID3D10InputLayout**               ppInputLayout);
+            ID3D10InputLayout**               ppInputLayout) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreateVertexShader(
       const void*                             pShaderBytecode,
             SIZE_T                            BytecodeLength,
-            ID3D10VertexShader**              ppVertexShader);
+            ID3D10VertexShader**              ppVertexShader) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreateGeometryShader(
       const void*                             pShaderBytecode,
             SIZE_T                            BytecodeLength,
-            ID3D10GeometryShader**            ppGeometryShader);
+            ID3D10GeometryShader**            ppGeometryShader) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreateGeometryShaderWithStreamOutput(
       const void*                             pShaderBytecode,
@@ -118,56 +118,56 @@ namespace dxvk {
       const D3D10_SO_DECLARATION_ENTRY*       pSODeclaration,
             UINT                              NumEntries,
             UINT                              OutputStreamStride,
-            ID3D10GeometryShader**            ppGeometryShader);
+            ID3D10GeometryShader**            ppGeometryShader) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreatePixelShader(
       const void*                             pShaderBytecode,
             SIZE_T                            BytecodeLength,
-            ID3D10PixelShader**               ppPixelShader);
+            ID3D10PixelShader**               ppPixelShader) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreateBlendState(
       const D3D10_BLEND_DESC*                 pBlendStateDesc,
-            ID3D10BlendState**                ppBlendState);
+            ID3D10BlendState**                ppBlendState) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreateBlendState1(
       const D3D10_BLEND_DESC1*                pBlendStateDesc,
-            ID3D10BlendState1**               ppBlendState);
+            ID3D10BlendState1**               ppBlendState) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreateDepthStencilState(
       const D3D10_DEPTH_STENCIL_DESC*         pDepthStencilDesc,
-            ID3D10DepthStencilState**         ppDepthStencilState);
+            ID3D10DepthStencilState**         ppDepthStencilState) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreateRasterizerState(
       const D3D10_RASTERIZER_DESC*            pRasterizerDesc,
-            ID3D10RasterizerState**           ppRasterizerState);
+            ID3D10RasterizerState**           ppRasterizerState) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreateSamplerState(
       const D3D10_SAMPLER_DESC*               pSamplerDesc,
-            ID3D10SamplerState**              ppSamplerState);
+            ID3D10SamplerState**              ppSamplerState) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreateQuery(
       const D3D10_QUERY_DESC*                 pQueryDesc,
-            ID3D10Query**                     ppQuery);
+            ID3D10Query**                     ppQuery) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreatePredicate(
       const D3D10_QUERY_DESC*                 pPredicateDesc,
-            ID3D10Predicate**                 ppPredicate);
+            ID3D10Predicate**                 ppPredicate) FAKE;
 
     HRESULT STDMETHODCALLTYPE CreateCounter(
       const D3D10_COUNTER_DESC*               pCounterDesc,
-            ID3D10Counter**                   ppCounter);
+            ID3D10Counter**                   ppCounter) FAKE;
 
     HRESULT STDMETHODCALLTYPE CheckFormatSupport(
             DXGI_FORMAT                       Format,
-            UINT*                             pFormatSupport);
+            UINT*                             pFormatSupport) FAKE;
 
     HRESULT STDMETHODCALLTYPE CheckMultisampleQualityLevels(
             DXGI_FORMAT                       Format,
             UINT                              SampleCount,
-            UINT*                             pNumQualityLevels);
+            UINT*                             pNumQualityLevels) FAKE;
 
     void STDMETHODCALLTYPE CheckCounterInfo(
-            D3D10_COUNTER_INFO*               pCounterInfo);
+            D3D10_COUNTER_INFO*               pCounterInfo) FAKE;
 
     HRESULT STDMETHODCALLTYPE CheckCounter(
       const D3D10_COUNTER_DESC*               pDesc,
@@ -178,32 +178,32 @@ namespace dxvk {
             char*                             units,
             UINT*                             pUnitsLength,
             char*                             description,
-            UINT*                             pDescriptionLength);
+            UINT*                             pDescriptionLength) FAKE;
 
-    UINT STDMETHODCALLTYPE GetCreationFlags();
+    UINT STDMETHODCALLTYPE GetCreationFlags() FAKE;
 
     HRESULT STDMETHODCALLTYPE OpenSharedResource(
             HANDLE                            hResource,
             REFIID                            ReturnedInterface,
-            void**                            ppResource);
+            void**                            ppResource) FAKE;
 
     void STDMETHODCALLTYPE ClearRenderTargetView(
             ID3D10RenderTargetView*           pRenderTargetView,
-      const FLOAT                             ColorRGBA[4]);
+      const FLOAT                             ColorRGBA[4]) FAKE;
 
     void STDMETHODCALLTYPE ClearDepthStencilView(
             ID3D10DepthStencilView*           pDepthStencilView,
             UINT                              ClearFlags,
             FLOAT                             Depth,
-            UINT8                             Stencil);
+            UINT8                             Stencil) FAKE;
 
     void STDMETHODCALLTYPE SetPredication(
             ID3D10Predicate*                  pPredicate,
-            BOOL                              PredicateValue);
+            BOOL                              PredicateValue) FAKE;
 
     void STDMETHODCALLTYPE GetPredication(
             ID3D10Predicate**                 ppPredicate,
-            BOOL*                             pPredicateValue);
+            BOOL*                             pPredicateValue) FAKE;
 
     void STDMETHODCALLTYPE CopySubresourceRegion(
             ID3D10Resource*                   pDstResource,
@@ -213,11 +213,11 @@ namespace dxvk {
             UINT                              DstZ,
             ID3D10Resource*                   pSrcResource,
             UINT                              SrcSubresource,
-      const D3D10_BOX*                        pSrcBox);
+      const D3D10_BOX*                        pSrcBox) FAKE;
 
     void STDMETHODCALLTYPE CopyResource(
             ID3D10Resource*                   pDstResource,
-            ID3D10Resource*                   pSrcResource);
+            ID3D10Resource*                   pSrcResource) FAKE;
 
     void STDMETHODCALLTYPE UpdateSubresource(
             ID3D10Resource*                   pDstResource,
@@ -225,253 +225,253 @@ namespace dxvk {
       const D3D10_BOX*                        pDstBox,
       const void*                             pSrcData,
             UINT                              SrcRowPitch,
-            UINT                              SrcDepthPitch);
+            UINT                              SrcDepthPitch) FAKE;
 
     void STDMETHODCALLTYPE GenerateMips(
-            ID3D10ShaderResourceView*         pShaderResourceView);
+            ID3D10ShaderResourceView*         pShaderResourceView) FAKE;
 
     void STDMETHODCALLTYPE ResolveSubresource(
             ID3D10Resource*                   pDstResource,
             UINT                              DstSubresource,
             ID3D10Resource*                   pSrcResource,
             UINT                              SrcSubresource,
-            DXGI_FORMAT                       Format);
+            DXGI_FORMAT                       Format) FAKE;
 
     void STDMETHODCALLTYPE Draw(
             UINT                              VertexCount,
-            UINT                              StartVertexLocation);
+            UINT                              StartVertexLocation) FAKE;
 
     void STDMETHODCALLTYPE DrawIndexed(
             UINT                              IndexCount,
             UINT                              StartIndexLocation,
-            INT                               BaseVertexLocation);
+            INT                               BaseVertexLocation) FAKE;
 
     void STDMETHODCALLTYPE DrawInstanced(
             UINT                              VertexCountPerInstance,
             UINT                              InstanceCount,
             UINT                              StartVertexLocation,
-            UINT                              StartInstanceLocation);
+            UINT                              StartInstanceLocation) FAKE;
 
     void STDMETHODCALLTYPE DrawIndexedInstanced(
             UINT                              IndexCountPerInstance,
             UINT                              InstanceCount,
             UINT                              StartIndexLocation,
             INT                               BaseVertexLocation,
-            UINT                              StartInstanceLocation);
+            UINT                              StartInstanceLocation) FAKE;
 
-    void STDMETHODCALLTYPE DrawAuto();
+    void STDMETHODCALLTYPE DrawAuto() FAKE;
 
     void STDMETHODCALLTYPE IASetInputLayout(
-            ID3D10InputLayout*                pInputLayout);
+            ID3D10InputLayout*                pInputLayout) FAKE;
 
     void STDMETHODCALLTYPE IASetPrimitiveTopology(
-            D3D10_PRIMITIVE_TOPOLOGY          Topology);
+            D3D10_PRIMITIVE_TOPOLOGY          Topology) FAKE;
 
     void STDMETHODCALLTYPE IASetVertexBuffers(
             UINT                              StartSlot,
             UINT                              NumBuffers,
             ID3D10Buffer* const*              ppVertexBuffers,
       const UINT*                             pStrides,
-      const UINT*                             pOffsets);
+      const UINT*                             pOffsets) FAKE;
 
     void STDMETHODCALLTYPE IASetIndexBuffer(
             ID3D10Buffer*                     pIndexBuffer,
             DXGI_FORMAT                       Format,
-            UINT                              Offset);
+            UINT                              Offset) FAKE;
 
     void STDMETHODCALLTYPE IAGetInputLayout(
-            ID3D10InputLayout**               ppInputLayout);
+            ID3D10InputLayout**               ppInputLayout) FAKE;
 
     void STDMETHODCALLTYPE IAGetPrimitiveTopology(
-            D3D10_PRIMITIVE_TOPOLOGY*         pTopology);
+            D3D10_PRIMITIVE_TOPOLOGY*         pTopology) FAKE;
 
     void STDMETHODCALLTYPE IAGetVertexBuffers(
             UINT                              StartSlot,
             UINT                              NumBuffers,
             ID3D10Buffer**                    ppVertexBuffers,
             UINT*                             pStrides,
-            UINT*                             pOffsets);
+            UINT*                             pOffsets) FAKE;
 
     void STDMETHODCALLTYPE IAGetIndexBuffer(
             ID3D10Buffer**                    pIndexBuffer,
             DXGI_FORMAT*                      Format,
-            UINT*                             Offset);
+            UINT*                             Offset) FAKE;
 
     void STDMETHODCALLTYPE VSSetShader(
-            ID3D10VertexShader*               pVertexShader);
+            ID3D10VertexShader*               pVertexShader) FAKE;
 
     void STDMETHODCALLTYPE VSSetConstantBuffers(
             UINT                              StartSlot,
             UINT                              NumBuffers,
-            ID3D10Buffer* const*              ppConstantBuffers);
+            ID3D10Buffer* const*              ppConstantBuffers) FAKE;
 
     void STDMETHODCALLTYPE VSSetShaderResources(
             UINT                              StartSlot,
             UINT                              NumViews,
-            ID3D10ShaderResourceView* const*  ppShaderResourceViews);
+            ID3D10ShaderResourceView* const*  ppShaderResourceViews) FAKE;
 
     void STDMETHODCALLTYPE VSSetSamplers(
             UINT                              StartSlot,
             UINT                              NumSamplers,
-            ID3D10SamplerState* const*        ppSamplers);
+            ID3D10SamplerState* const*        ppSamplers) FAKE;
 
     void STDMETHODCALLTYPE VSGetShader(
-            ID3D10VertexShader**              ppVertexShader);
+            ID3D10VertexShader**              ppVertexShader) FAKE;
 
     void STDMETHODCALLTYPE VSGetConstantBuffers(
             UINT                              StartSlot,
             UINT                              NumBuffers,
-            ID3D10Buffer**                    ppConstantBuffers);
+            ID3D10Buffer**                    ppConstantBuffers) FAKE;
 
     void STDMETHODCALLTYPE VSGetShaderResources(
             UINT                              StartSlot,
             UINT                              NumViews,
-            ID3D10ShaderResourceView**        ppShaderResourceViews);
+            ID3D10ShaderResourceView**        ppShaderResourceViews) FAKE;
 
     void STDMETHODCALLTYPE VSGetSamplers(
             UINT                              StartSlot,
             UINT                              NumSamplers,
-            ID3D10SamplerState**              ppSamplers);
+            ID3D10SamplerState**              ppSamplers) FAKE;
 
     void STDMETHODCALLTYPE GSSetShader(
-            ID3D10GeometryShader*             pShader);
+            ID3D10GeometryShader*             pShader) FAKE;
 
     void STDMETHODCALLTYPE GSSetConstantBuffers(
             UINT                              StartSlot,
             UINT                              NumBuffers,
-            ID3D10Buffer* const*              ppConstantBuffers);
+            ID3D10Buffer* const*              ppConstantBuffers) FAKE;
 
     void STDMETHODCALLTYPE GSSetShaderResources(
             UINT                              StartSlot,
             UINT                              NumViews,
-            ID3D10ShaderResourceView* const*  ppShaderResourceViews);
+            ID3D10ShaderResourceView* const*  ppShaderResourceViews) FAKE;
 
     void STDMETHODCALLTYPE GSSetSamplers(
             UINT                              StartSlot,
             UINT                              NumSamplers,
-            ID3D10SamplerState* const*        ppSamplers);
+            ID3D10SamplerState* const*        ppSamplers) FAKE;
 
     void STDMETHODCALLTYPE GSGetShader(
-            ID3D10GeometryShader**            ppGeometryShader);
+            ID3D10GeometryShader**            ppGeometryShader) FAKE;
 
     void STDMETHODCALLTYPE GSGetConstantBuffers(
             UINT                              StartSlot,
             UINT                              NumBuffers,
-            ID3D10Buffer**                    ppConstantBuffers);
+            ID3D10Buffer**                    ppConstantBuffers) FAKE;
 
     void STDMETHODCALLTYPE GSGetShaderResources(
             UINT                              StartSlot,
             UINT                              NumViews,
-            ID3D10ShaderResourceView**        ppShaderResourceViews);
+            ID3D10ShaderResourceView**        ppShaderResourceViews) FAKE;
 
     void STDMETHODCALLTYPE GSGetSamplers(
             UINT                              StartSlot,
             UINT                              NumSamplers,
-            ID3D10SamplerState**              ppSamplers);
+            ID3D10SamplerState**              ppSamplers) FAKE;
 
     void STDMETHODCALLTYPE PSSetShader(
-            ID3D10PixelShader*                pPixelShader);
+            ID3D10PixelShader*                pPixelShader) FAKE;
 
     void STDMETHODCALLTYPE PSSetConstantBuffers(
             UINT                              StartSlot,
             UINT                              NumBuffers,
-            ID3D10Buffer* const*              ppConstantBuffers);
+            ID3D10Buffer* const*              ppConstantBuffers) FAKE;
 
     void STDMETHODCALLTYPE PSSetShaderResources(
             UINT                              StartSlot,
             UINT                              NumViews,
-            ID3D10ShaderResourceView* const*  ppShaderResourceViews);
+            ID3D10ShaderResourceView* const*  ppShaderResourceViews) FAKE;
 
     void STDMETHODCALLTYPE PSSetSamplers(
             UINT                              StartSlot,
             UINT                              NumSamplers,
-            ID3D10SamplerState* const*        ppSamplers);
+            ID3D10SamplerState* const*        ppSamplers) FAKE;
 
     void STDMETHODCALLTYPE PSGetShader(
-            ID3D10PixelShader**               ppPixelShader);
+            ID3D10PixelShader**               ppPixelShader) FAKE;
 
     void STDMETHODCALLTYPE PSGetConstantBuffers(
             UINT                              StartSlot,
             UINT                              NumBuffers,
-            ID3D10Buffer**                    ppConstantBuffers);
+            ID3D10Buffer**                    ppConstantBuffers) FAKE;
 
     void STDMETHODCALLTYPE PSGetShaderResources(
             UINT                              StartSlot,
             UINT                              NumViews,
-            ID3D10ShaderResourceView**        ppShaderResourceViews);
+            ID3D10ShaderResourceView**        ppShaderResourceViews) FAKE;
 
     void STDMETHODCALLTYPE PSGetSamplers(
             UINT                              StartSlot,
             UINT                              NumSamplers,
-            ID3D10SamplerState**              ppSamplers);
+            ID3D10SamplerState**              ppSamplers) FAKE;
 
     void STDMETHODCALLTYPE OMSetRenderTargets(
             UINT                              NumViews,
             ID3D10RenderTargetView* const*    ppRenderTargetViews,
-            ID3D10DepthStencilView*           pDepthStencilView);
+            ID3D10DepthStencilView*           pDepthStencilView) FAKE;
 
     void STDMETHODCALLTYPE OMSetBlendState(
             ID3D10BlendState*                 pBlendState,
       const FLOAT                             BlendFactor[4],
-            UINT                              SampleMask);
+            UINT                              SampleMask) FAKE;
 
     void STDMETHODCALLTYPE OMSetDepthStencilState(
             ID3D10DepthStencilState*          pDepthStencilState,
-            UINT                              StencilRef);
+            UINT                              StencilRef) FAKE;
 
     void STDMETHODCALLTYPE OMGetRenderTargets(
             UINT                              NumViews,
             ID3D10RenderTargetView**          ppRenderTargetViews,
-            ID3D10DepthStencilView**          ppDepthStencilView);
+            ID3D10DepthStencilView**          ppDepthStencilView) FAKE;
 
     void STDMETHODCALLTYPE OMGetBlendState(
             ID3D10BlendState**                ppBlendState,
             FLOAT                             BlendFactor[4],
-            UINT*                             pSampleMask);
+            UINT*                             pSampleMask) FAKE;
 
     void STDMETHODCALLTYPE OMGetDepthStencilState(
             ID3D10DepthStencilState**         ppDepthStencilState,
-            UINT*                             pStencilRef);
+            UINT*                             pStencilRef) FAKE;
 
     void STDMETHODCALLTYPE RSSetState(
-            ID3D10RasterizerState*            pRasterizerState);
+            ID3D10RasterizerState*            pRasterizerState) FAKE;
 
     void STDMETHODCALLTYPE RSSetViewports(
             UINT                              NumViewports,
-      const D3D10_VIEWPORT*                   pViewports);
+      const D3D10_VIEWPORT*                   pViewports) FAKE;
 
     void STDMETHODCALLTYPE RSSetScissorRects(
             UINT                              NumRects,
-      const D3D10_RECT*                       pRects);
+      const D3D10_RECT*                       pRects) FAKE;
 
     void STDMETHODCALLTYPE RSGetState(
-            ID3D10RasterizerState**           ppRasterizerState);
+            ID3D10RasterizerState**           ppRasterizerState) FAKE;
 
     void STDMETHODCALLTYPE RSGetViewports(
             UINT*                             NumViewports,
-            D3D10_VIEWPORT*                   pViewports);
+            D3D10_VIEWPORT*                   pViewports) FAKE;
 
     void STDMETHODCALLTYPE RSGetScissorRects(
             UINT*                             NumRects,
-            D3D10_RECT*                       pRects);
+            D3D10_RECT*                       pRects) FAKE;
 
     void STDMETHODCALLTYPE SOSetTargets(
             UINT                              NumBuffers,
             ID3D10Buffer* const*              ppSOTargets,
-      const UINT*                             pOffsets);
+      const UINT*                             pOffsets) FAKE;
 
     void STDMETHODCALLTYPE SOGetTargets(
             UINT                              NumBuffers,
             ID3D10Buffer**                    ppSOTargets,
-            UINT*                             pOffsets);
+            UINT*                             pOffsets) FAKE;
 
     void STDMETHODCALLTYPE SetTextFilterSize(
             UINT                              Width,
-            UINT                              Height);
+            UINT                              Height) FAKE;
 
     void STDMETHODCALLTYPE GetTextFilterSize(
             UINT*                             pWidth,
-            UINT*                             pHeight);
+            UINT*                             pHeight) FAKE;
     
     D3D10DeviceLock LockDevice() {
       return m_threadSafe

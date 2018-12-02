@@ -17,46 +17,46 @@ namespace dxvk {
 
     HRESULT STDMETHODCALLTYPE QueryInterface(
             REFIID                    riid,
-            void**                    ppvObject);
+            void**                    ppvObject) FAKE;
 
-    ULONG STDMETHODCALLTYPE AddRef();
+    ULONG STDMETHODCALLTYPE AddRef() FAKE;
 
-    ULONG STDMETHODCALLTYPE Release();
+    ULONG STDMETHODCALLTYPE Release() FAKE;
 
     void STDMETHODCALLTYPE GetDevice(
-            ID3D10Device**            ppDevice);
+            ID3D10Device**            ppDevice) FAKE;
 
     HRESULT STDMETHODCALLTYPE GetPrivateData(
             REFGUID                   guid,
             UINT*                     pDataSize,
-            void*                     pData);
+            void*                     pData) FAKE;
 
     HRESULT STDMETHODCALLTYPE SetPrivateData(
             REFGUID                   guid,
             UINT                      DataSize,
-      const void*                     pData);
+      const void*                     pData) FAKE;
 
     HRESULT STDMETHODCALLTYPE SetPrivateDataInterface(
             REFGUID                   guid,
-      const IUnknown*                 pData);
+      const IUnknown*                 pData) FAKE;
 
     void STDMETHODCALLTYPE GetType(
-            D3D10_RESOURCE_DIMENSION* rType);
+            D3D10_RESOURCE_DIMENSION* rType) FAKE;
 
     void STDMETHODCALLTYPE SetEvictionPriority(
-            UINT                      EvictionPriority);
+            UINT                      EvictionPriority) FAKE;
 
-    UINT STDMETHODCALLTYPE GetEvictionPriority();
+    UINT STDMETHODCALLTYPE GetEvictionPriority() FAKE;
 
     HRESULT STDMETHODCALLTYPE Map(
             D3D10_MAP                 MapType,
             UINT                      MapFlags,
-            void**                    ppData);
+            void**                    ppData) FAKE;
 
-    void STDMETHODCALLTYPE Unmap();
+    void STDMETHODCALLTYPE Unmap() FAKE;
 
     void STDMETHODCALLTYPE GetDesc(
-            D3D10_BUFFER_DESC*        pDesc);
+            D3D10_BUFFER_DESC*        pDesc) FAKE;
     
     D3D11Buffer* GetD3D11Iface() {
       return m_d3d11;
