@@ -35,6 +35,7 @@ namespace dxvk::env {
     return str::fromws(result.data());
 #else
     const char *result = std::getenv(name.c_str());
+    if(!result) return "";
     return std::string(result);
 #endif
   }
