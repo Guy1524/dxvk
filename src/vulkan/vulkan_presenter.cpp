@@ -331,6 +331,7 @@ namespace dxvk::vk {
 
 
   VkResult Presenter::createSurface(HWND window) {
+#ifndef DXVK_NATIVE
     HINSTANCE instance = reinterpret_cast<HINSTANCE>(
       GetWindowLongPtr(window, GWLP_HINSTANCE));
     
@@ -343,7 +344,10 @@ namespace dxvk::vk {
     
     VkResult status = m_vki->vkCreateWin32SurfaceKHR(
       m_vki->instance(), &info, nullptr, &m_surface);
-    
+#else
+    VkResult status = glfwCreateWindowSurface(
+      m_vki->instance(), window, nullptr, &m_surface);
+#endif
     if (status != VK_SUCCESS)
       return status;
     
@@ -359,6 +363,7 @@ namespace dxvk::vk {
     }
 
     return VK_SUCCESS;
+
   }
 
 
