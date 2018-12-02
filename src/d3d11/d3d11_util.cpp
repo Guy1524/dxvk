@@ -1,5 +1,9 @@
 #include "d3d11_util.h"
 
+#ifdef DXVK_NATIVE
+  #include "../d3d10/d3d10_util.h"
+#endif
+
 namespace dxvk {
   
   HRESULT DecodeSampleCount(UINT Count, VkSampleCountFlagBits* pCount) {
@@ -176,5 +180,9 @@ namespace dxvk {
         return VK_FORMAT_UNDEFINED;
     }
   }
+
+  void GetD3D10Device(
+        ID3D11DeviceChild*    pObject,
+        ID3D10Device**        ppDevice) FAKE;
 
 }
