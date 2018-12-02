@@ -54,8 +54,8 @@ if dxvk_winelib
   def_spec_ext = '.spec'
 elif dxvk_native
   lib_vulkan = dxvk_compiler.find_library('vulkan', dirs : dxvk_library_path)
-  lib_dxgi   = declare_dependency(link_args: ['-ldxgi'])
-  lib_dl     = dependency('', required: false)
+  lib_dxgi   = declare_dependency(link_args: ['src/dxgi/dxgi.so'])
+  lib_dl     = declare_dependency(link_args: [ '-ldl' ])
   lib_glfw3  = dependency('glfw3', required: true)
   include_dirs += './include/native'
   exe_ext = ''
