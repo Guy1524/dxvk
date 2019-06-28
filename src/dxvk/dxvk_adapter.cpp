@@ -245,7 +245,7 @@ namespace dxvk {
   Rc<DxvkDevice> DxvkAdapter::createDevice(std::string clientApi, DxvkDeviceFeatures enabledFeatures) {
     DxvkDeviceExtensions devExtensions;
 
-    std::array<DxvkExt*, 25> devExtensionList = {{
+    std::array<DxvkExt*, 27> devExtensionList = {{
       &devExtensions.amdMemoryOverallocationBehaviour,
       &devExtensions.amdShaderFragmentMask,
       &devExtensions.extConditionalRendering,
@@ -271,6 +271,8 @@ namespace dxvk {
       &devExtensions.khrSamplerMirrorClampToEdge,
       &devExtensions.khrShaderDrawParameters,
       &devExtensions.khrSwapchain,
+      &devExtensions.khrExternalMemory,
+      &devExtensions.khrExternalMemoryWin32
     }};
 
     DxvkNameSet extensionsEnabled;
