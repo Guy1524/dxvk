@@ -44,6 +44,10 @@ namespace dxvk {
     (pTexture->GetMapMode() == D3D11_COMMON_TEXTURE_MAP_MODE_DIRECT)
       ? InitHostVisibleTexture(pTexture, pInitialData)
       : InitDeviceLocalTexture(pTexture, pInitialData);
+
+    // Flush if we are a shared texture.
+    if (pTexture->GetSharedHandle() != nullptr)
+      Flush();
   }
 
 

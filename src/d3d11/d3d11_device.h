@@ -470,6 +470,12 @@ namespace dxvk {
     BOOL GetImageTypeSupport(
             VkFormat    Format,
             VkImageType Type) const;
+
+    HRESULT OpenSharedResourceGeneric(
+        BOOL        NTHandle,
+        HANDLE      hResource,
+        REFIID      ReturnedInterface,
+        void**      ppResource);
     
     template<typename Void>
     void CopySubresourceData(
