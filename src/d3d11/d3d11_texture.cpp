@@ -213,8 +213,7 @@ namespace dxvk {
     if (m_sharedHandle) {
       bool ntHandle = m_desc.MiscFlags & D3D11_RESOURCE_MISC_SHARED_NTHANDLE;
 
-      std::string name = DetermineSharedResourceFileName(ntHandle, m_sharedHandle);
-      DeleteFileA(name.c_str());
+      CleanupSharedResourceInfo(ntHandle, m_sharedHandle);
 
       // If we have an NT handle we must close that.
       if (ntHandle)
